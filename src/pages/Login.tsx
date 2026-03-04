@@ -38,9 +38,8 @@ const Login = () => {
     setLoading(false);
     if (error) {
       toast.error(error.message);
-    } else {
-      navigate('/');
     }
+    // Redirect handled by useEffect watching user/role
   };
 
   const handleGoogleLogin = async () => {
