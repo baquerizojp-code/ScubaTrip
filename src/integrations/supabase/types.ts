@@ -390,6 +390,16 @@ export type Database = {
     }
     Functions: {
       confirm_booking: { Args: { _booking_id: string }; Returns: boolean }
+      create_notification: {
+        Args: {
+          _body: string
+          _title: string
+          _trip_id?: string
+          _type: string
+          _user_id: string
+        }
+        Returns: string
+      }
       get_user_dive_center_id: { Args: { _user_id: string }; Returns: string }
       get_user_role: {
         Args: { _user_id: string }
