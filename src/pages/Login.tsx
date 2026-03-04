@@ -12,9 +12,24 @@ import { toast } from 'sonner';
 const Login = () => {
   const { t } = useI18n();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user, role } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const from = (location.state as any)?.from || null;
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user && role) {
+      if (from) navigate(from, { replace: true });
+      else if (role === 'diver') navigate('/app/discover', { replace: true });
+      else navigate('/admin', { replace: true });
+    } else if (user && !role) {
+      navigate('/select-role', { replace: true });
+    }
+  }, [user, role]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
