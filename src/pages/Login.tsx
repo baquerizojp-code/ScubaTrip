@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import { Waves } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,9 +12,24 @@ import { toast } from 'sonner';
 const Login = () => {
   const { t } = useI18n();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user, role } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const from = (location.state as any)?.from || null;
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user && role) {
+      if (from) navigate(from, { replace: true });
+      else if (role === 'diver') navigate('/app/discover', { replace: true });
+      else navigate('/admin', { replace: true });
+    } else if (user && !role) {
+      navigate('/select-role', { replace: true });
+    }
+  }, [user, role]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,17 +38,16 @@ const Login = () => {
     setLoading(false);
     if (error) {
       toast.error(error.message);
-    } else {
-      navigate('/');
     }
+    // Redirect handled by useEffect watching user/role
   };
 
   const handleGoogleLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: window.location.origin },
+    const { lovable } = await import('@/integrations/lovable');
+    const result = await lovable.auth.signInWithOAuth('google', {
+      redirect_uri: window.location.origin,
     });
-    if (error) toast.error(error.message);
+    if (result?.error) toast.error(String(result.error));
   };
 
   return (
