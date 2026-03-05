@@ -6,9 +6,10 @@ interface ProtectedRouteProps {
   children: ReactNode;
   allowedRoles?: string[];
   redirectTo?: string;
+  skipRoleCheck?: boolean;
 }
 
-const ProtectedRoute = ({ children, allowedRoles, redirectTo = '/login' }: ProtectedRouteProps) => {
+const ProtectedRoute = ({ children, allowedRoles, redirectTo = '/login', skipRoleCheck = false }: ProtectedRouteProps) => {
   const { user, role, loading } = useAuth();
   const location = useLocation();
 
@@ -24,8 +25,8 @@ const ProtectedRoute = ({ children, allowedRoles, redirectTo = '/login' }: Prote
     return <Navigate to={redirectTo} state={{ from: location.pathname }} replace />;
   }
 
-  // No role yet → send to role selection
-  if (!role) {
+  // No role yet → send to role selection (unless we're already there)
+  if (!role && !skipRoleCheck) {
     return <Navigate to="/select-role" replace />;
   }
 

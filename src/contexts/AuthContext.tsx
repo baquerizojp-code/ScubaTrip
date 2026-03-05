@@ -63,22 +63,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Use setTimeout to avoid potential deadlocks
-          setTimeout(() => fetchUserRole(session.user.id), 0);
+          // Use setTimeout to avoid potential deadlocks with Supabase
+          setTimeout(async () => {
+            await fetchUserRole(session.user.id);
+            setLoading(false);
+          }, 0);
         } else {
           setRole(null);
           setDiveCenterId(null);
+          setLoading(false);
         }
-        setLoading(false);
       }
     );
 
     // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        fetchUserRole(session.user.id);
+        await fetchUserRole(session.user.id);
       }
       setLoading(false);
     });
