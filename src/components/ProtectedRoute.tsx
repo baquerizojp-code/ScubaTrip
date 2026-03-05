@@ -6,6 +6,7 @@ interface ProtectedRouteProps {
   children: ReactNode;
   allowedRoles?: string[];
   redirectTo?: string;
+  skipRoleCheck?: boolean;
 }
 
 const ProtectedRoute = ({ children, allowedRoles, redirectTo = '/login' }: ProtectedRouteProps) => {
