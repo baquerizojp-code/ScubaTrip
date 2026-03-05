@@ -5,11 +5,16 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import AdminLayout from "@/components/AdminLayout";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import SelectRole from "./pages/SelectRole";
 import AdminDashboard from "./pages/admin/Dashboard";
+import AdminTrips from "./pages/admin/Trips";
+import AdminBookings from "./pages/admin/Bookings";
+import AdminStaff from "./pages/admin/Staff";
+import AdminSettings from "./pages/admin/Settings";
 import DiverDiscover from "./pages/app/Discover";
 import NotFound from "./pages/NotFound";
 
@@ -33,12 +38,18 @@ const App = () => (
               </ProtectedRoute>
             } />
 
-            {/* Admin routes */}
+            {/* Admin routes with shared layout */}
             <Route path="/admin" element={
               <ProtectedRoute allowedRoles={['dive_center_admin', 'dive_center_staff']}>
-                <AdminDashboard />
+                <AdminLayout />
               </ProtectedRoute>
-            } />
+            }>
+              <Route index element={<AdminDashboard />} />
+              <Route path="trips" element={<AdminTrips />} />
+              <Route path="bookings" element={<AdminBookings />} />
+              <Route path="staff" element={<AdminStaff />} />
+              <Route path="settings" element={<AdminSettings />} />
+            </Route>
 
             {/* Diver routes */}
             <Route path="/app/discover" element={
