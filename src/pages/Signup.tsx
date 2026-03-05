@@ -33,7 +33,7 @@ const Signup = () => {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: { emailRedirectTo: window.location.origin },
@@ -41,6 +41,9 @@ const Signup = () => {
     setLoading(false);
     if (error) {
       toast.error(error.message);
+    } else if (data.session) {
+      // Auto-confirmed — useEffect will redirect to /select-role
+      toast.success('¡Cuenta creada!');
     } else {
       toast.success('Check your email to confirm your account!');
       navigate('/login');
