@@ -13,11 +13,17 @@ import { toast } from 'sonner';
 type Step = 'select' | 'diver-profile' | 'center-profile';
 
 const SelectRole = () => {
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   const { t } = useI18n();
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>('select');
   const [loading, setLoading] = useState(false);
+
+  // If user already has a role, redirect them
+  useEffect(() => {
+    if (role === 'diver') navigate('/app/discover', { replace: true });
+    else if (role === 'dive_center_admin' || role === 'dive_center_staff') navigate('/admin', { replace: true });
+  }, [role, navigate]);
 
   // Diver form
   const [diverName, setDiverName] = useState('');
