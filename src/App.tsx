@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import AdminLayout from "@/components/AdminLayout";
+import DiverLayout from "@/components/DiverLayout";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -16,6 +17,10 @@ import AdminBookings from "./pages/admin/Bookings";
 import AdminStaff from "./pages/admin/Staff";
 import AdminSettings from "./pages/admin/Settings";
 import DiverDiscover from "./pages/app/Discover";
+import TripDetail from "./pages/app/TripDetail";
+import MyBookings from "./pages/app/MyBookings";
+import GroupChat from "./pages/app/GroupChat";
+import DiverProfile from "./pages/app/DiverProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -51,12 +56,18 @@ const App = () => (
               <Route path="settings" element={<AdminSettings />} />
             </Route>
 
-            {/* Diver routes */}
-            <Route path="/app/discover" element={
+            {/* Diver routes with shared layout */}
+            <Route path="/app" element={
               <ProtectedRoute allowedRoles={['diver']}>
-                <DiverDiscover />
+                <DiverLayout />
               </ProtectedRoute>
-            } />
+            }>
+              <Route path="discover" element={<DiverDiscover />} />
+              <Route path="trip/:id" element={<TripDetail />} />
+              <Route path="trip/:id/group" element={<GroupChat />} />
+              <Route path="bookings" element={<MyBookings />} />
+              <Route path="profile" element={<DiverProfile />} />
+            </Route>
 
             <Route path="*" element={<NotFound />} />
           </Routes>

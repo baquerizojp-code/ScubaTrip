@@ -5,7 +5,7 @@ import { useI18n } from '@/lib/i18n';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { MapPin, Calendar, Clock, Users, DollarSign } from 'lucide-react';
+import { MapPin, Calendar, Clock, Users, DollarSign, Compass } from 'lucide-react';
 import { format } from 'date-fns';
 import type { Tables } from '@/integrations/supabase/types';
 
@@ -23,7 +23,7 @@ const DiverDiscover = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetch = async () => {
+    const fetchTrips = async () => {
       const { data } = await supabase
         .from('trips')
         .select('*, dive_centers(name, logo_url)')
@@ -33,7 +33,7 @@ const DiverDiscover = () => {
       setTrips((data as Trip[]) || []);
       setLoading(false);
     };
-    fetch();
+    fetchTrips();
   }, []);
 
   return (
@@ -105,8 +105,5 @@ const DiverDiscover = () => {
     </div>
   );
 };
-
-// need Compass for empty state
-import { Compass } from 'lucide-react';
 
 export default DiverDiscover;
