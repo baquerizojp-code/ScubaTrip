@@ -96,16 +96,6 @@ const Landing = () => {
               </div>
             </div>
 
-            {/* Stats bar — mobile horizontal scroll, desktop inline */}
-            <div className="mt-10 sm:mt-16 flex gap-6 sm:gap-10 overflow-x-auto pb-2 animate-fade-in" style={{ animationDelay: '0.36s' }}>
-              {stats.map((s) => (
-                <div key={s.labelKey} className="flex items-center gap-2 shrink-0">
-                  {s.icon && <s.icon className="w-4 h-4 text-warning fill-warning" />}
-                  <span className="text-2xl sm:text-3xl font-bold text-primary-foreground">{s.value}</span>
-                  <span className="text-sm text-ocean-300">{t(s.labelKey)}</span>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </section>
