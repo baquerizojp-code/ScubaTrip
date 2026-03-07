@@ -63,6 +63,8 @@ const AdminTrips = () => {
     }
   }, [searchParams, setSearchParams]);
 
+  const filterParam = searchParams.get('filter');
+
   const { data: trips, isLoading } = useQuery({
     queryKey: ['admin-trips', diveCenterId],
     queryFn: async () => {
@@ -77,6 +79,18 @@ const AdminTrips = () => {
     },
     enabled: !!diveCenterId,
   });
+
+  // Apply filter if coming from dashboard
+  const filteredTrips = (() => {
+    if (!trips) return [];
+    if (filterParam === 'upcoming') {
+      const today = new Date().toISOString().split('T')[0];
+      return trips
+        .filter(t => t.status === 'published' && t.trip_date >= today)
+        .sort((a, b) => a.trip_date.localeCompare(b.trip_date));
+    }
+    return trips;
+  })();
 
   const saveMutation = useMutation({
     mutationFn: async (data: TripFormData) => {
