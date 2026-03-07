@@ -3,7 +3,9 @@ import { useI18n } from '@/lib/i18n';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
-import { Ship, CalendarCheck, Users } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Ship, CalendarCheck, Users, Plus } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const { diveCenterId } = useAuth();
@@ -51,7 +53,14 @@ const AdminDashboard = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-foreground mb-1">{t('admin.dashboard.title')}</h1>
+      <div className="flex items-center justify-between mb-1">
+        <h1 className="text-2xl font-bold text-foreground">{t('admin.dashboard.title')}</h1>
+        <Button asChild className="gap-2">
+          <Link to="/admin/trips?new=1">
+            <Plus className="h-4 w-4" /> {t('admin.trips.create')}
+          </Link>
+        </Button>
+      </div>
       <p className="text-sm text-muted-foreground mb-8">{t('admin.dashboard.subtitle')}</p>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {cards.map(({ icon: Icon, label, value }) => (
