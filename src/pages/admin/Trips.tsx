@@ -49,9 +49,19 @@ const AdminTrips = () => {
   const { diveCenterId } = useAuth();
   const { t } = useI18n();
   const queryClient = useQueryClient();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<TripFormData>(emptyForm);
+
+  useEffect(() => {
+    if (searchParams.get('new') === '1') {
+      setEditingId(null);
+      setForm(emptyForm);
+      setDialogOpen(true);
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   const { data: trips, isLoading } = useQuery({
     queryKey: ['admin-trips', diveCenterId],
