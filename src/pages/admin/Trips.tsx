@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useSearchParams } from 'react-router-dom';
 import { useI18n } from '@/lib/i18n';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -48,9 +49,19 @@ const AdminTrips = () => {
   const { diveCenterId } = useAuth();
   const { t } = useI18n();
   const queryClient = useQueryClient();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<TripFormData>(emptyForm);
+
+  useEffect(() => {
+    if (searchParams.get('new') === '1') {
+      setEditingId(null);
+      setForm(emptyForm);
+      setDialogOpen(true);
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   const { data: trips, isLoading } = useQuery({
     queryKey: ['admin-trips', diveCenterId],
@@ -228,11 +239,11 @@ const AdminTrips = () => {
               </div>
               <div>
                 <Label>{t('common.price')} (USD)</Label>
-                <Input type="number" min={0} step={0.01} value={form.price_usd} onChange={(e) => setForm({ ...form, price_usd: Number(e.target.value) })} required />
+                <Input type="number" min={0} step={0.01} value={form.price_usd || ''} onChange={(e) => setForm({ ...form, price_usd: Number(e.target.value) })} required />
               </div>
               <div>
                 <Label>{t('admin.trips.field.spots')}</Label>
-                <Input type="number" min={1} value={form.total_spots} onChange={(e) => setForm({ ...form, total_spots: Number(e.target.value) })} required />
+                <Input type="number" min={1} value={form.total_spots || ''} onChange={(e) => setForm({ ...form, total_spots: Number(e.target.value) })} required />
               </div>
               <div>
                 <Label>{t('admin.trips.field.difficulty')}</Label>
