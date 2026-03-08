@@ -9,6 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useI18n } from '@/lib/i18n';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { formatPhoneNumber, stripPhoneFormat } from '@/lib/phoneFormat';
 
 const PENDING_CENTER_KEY = 'pending_center_signup';
 
