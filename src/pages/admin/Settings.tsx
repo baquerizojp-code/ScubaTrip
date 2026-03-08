@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { MapPin, Clock, Globe, Instagram, Facebook } from 'lucide-react';
 import { formatPhoneNumber, stripPhoneFormat } from '@/lib/phoneFormat';
+import PhoneInput from '@/components/PhoneInput';
 
 const WHATSAPP_REGEX = /^\+[1-9]\d{6,14}$/;
 
