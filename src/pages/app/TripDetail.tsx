@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -20,6 +22,21 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -31,6 +48,15 @@ import { downloadICSFile, getGoogleCalendarUrl } from '@/lib/calendar';
 import type { Tables } from '@/integrations/supabase/types';
 
 type Trip = Tables<'trips'> & { dive_centers: { name: string } | null };
+
+const certOptions = [
+  { value: 'none', labelKey: 'profile.cert.none' },
+  { value: 'open_water', labelKey: 'profile.cert.openWater' },
+  { value: 'advanced_open_water', labelKey: 'profile.cert.advanced' },
+  { value: 'rescue_diver', labelKey: 'profile.cert.rescue' },
+  { value: 'divemaster', labelKey: 'profile.cert.divemaster' },
+  { value: 'instructor', labelKey: 'profile.cert.instructor' },
+] as const;
 
 const TripDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -46,6 +72,20 @@ const TripDetail = () => {
   const [existingBooking, setExistingBooking] = useState<Tables<'bookings'> | null>(null);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [cancelling, setCancelling] = useState(false);
+
+  // Profile completion dialog state
+  const [showProfileDialog, setShowProfileDialog] = useState(false);
+  const [dialogFullName, setDialogFullName] = useState('');
+  const [dialogCertification, setDialogCertification] = useState('none');
+  const [creatingProfile, setCreatingProfile] = useState(false);
+
+  // Pre-fill name from OAuth metadata
+  useEffect(() => {
+    if (user) {
+      const meta = user.user_metadata;
+      setDialogFullName(meta?.full_name || meta?.name || '');
+    }
+  }, [user]);
 
   useEffect(() => {
     if (!id) return;
@@ -70,24 +110,10 @@ const TripDetail = () => {
     fetchData();
   }, [id, user]);
 
-  const handleBook = async () => {
-    if (!trip || !user) return;
-    setBooking(true);
-    const { data: profile } = await supabase
-      .from('diver_profiles')
-      .select('id')
-      .eq('user_id', user.id)
-      .single();
-
-    if (!profile) {
-      toast({ title: t('diver.trip.noProfile'), variant: 'destructive' });
-      setBooking(false);
-      return;
-    }
-
+  const insertBooking = async (tripId: string, diverId: string) => {
     const { error } = await supabase.from('bookings').insert({
-      trip_id: trip.id,
-      diver_id: profile.id,
+      trip_id: tripId,
+      diver_id: diverId,
       notes: notes || null,
     });
 
@@ -98,12 +124,68 @@ const TripDetail = () => {
       const { data: bk } = await supabase
         .from('bookings')
         .select('*')
-        .eq('trip_id', trip.id)
-        .eq('diver_id', profile.id)
+        .eq('trip_id', tripId)
+        .eq('diver_id', diverId)
         .maybeSingle();
       setExistingBooking(bk);
     }
+  };
+
+  const handleBook = async () => {
+    if (!trip || !user) return;
+    setBooking(true);
+    const { data: profile } = await supabase
+      .from('diver_profiles')
+      .select('id')
+      .eq('user_id', user.id)
+      .single();
+
+    if (!profile) {
+      setShowProfileDialog(true);
+      setBooking(false);
+      return;
+    }
+
+    await insertBooking(trip.id, profile.id);
     setBooking(false);
+  };
+
+  const handleCompleteProfileAndBook = async () => {
+    if (!trip || !user || !dialogFullName.trim()) return;
+    setCreatingProfile(true);
+
+    // 1. Assign diver role
+    const { error: roleError } = await supabase.from('user_roles').insert({
+      user_id: user.id,
+      role: 'diver',
+    });
+    if (roleError && !roleError.message.includes('duplicate')) {
+      toast({ title: t('diver.trip.bookError'), variant: 'destructive' });
+      setCreatingProfile(false);
+      return;
+    }
+
+    // 2. Create diver profile
+    const { data: newProfile, error: profileError } = await supabase
+      .from('diver_profiles')
+      .insert({
+        user_id: user.id,
+        full_name: dialogFullName.trim(),
+        certification: dialogCertification as any,
+      })
+      .select('id')
+      .single();
+
+    if (profileError || !newProfile) {
+      toast({ title: t('diver.trip.bookError'), variant: 'destructive' });
+      setCreatingProfile(false);
+      return;
+    }
+
+    // 3. Auto-book
+    await insertBooking(trip.id, newProfile.id);
+    setShowProfileDialog(false);
+    setCreatingProfile(false);
   };
 
   const handleCancelPending = async () => {
@@ -360,6 +442,51 @@ const TripDetail = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Complete profile dialog */}
+      <Dialog open={showProfileDialog} onOpenChange={setShowProfileDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t('diver.trip.completeProfileTitle')}</DialogTitle>
+            <DialogDescription>{t('diver.trip.completeProfileDesc')}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="profile-name">{t('diver.trip.fullNameLabel')}</Label>
+              <Input
+                id="profile-name"
+                value={dialogFullName}
+                onChange={e => setDialogFullName(e.target.value)}
+                placeholder={t('diver.trip.fullNameLabel')}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="profile-cert">{t('diver.trip.certLabel')}</Label>
+              <Select value={dialogCertification} onValueChange={setDialogCertification}>
+                <SelectTrigger id="profile-cert">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {certOptions.map(opt => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {t(opt.labelKey)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              className="w-full bg-gradient-ocean text-primary-foreground hover:opacity-90 shadow-ocean"
+              onClick={handleCompleteProfileAndBook}
+              disabled={creatingProfile || !dialogFullName.trim()}
+            >
+              {creatingProfile ? t('common.loading') : t('diver.trip.completeAndBook')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
