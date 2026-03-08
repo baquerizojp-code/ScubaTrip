@@ -213,7 +213,7 @@ const Landing = () => {
         <div className="container mx-auto px-5 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-ocean-400 text-sm">© {new Date().getFullYear()} Scuba Planner</p>
           <div className="flex gap-6">
-            <Link to="/signup" className="text-ocean-400 hover:text-ocean-200 text-sm transition-colors">
+            <Link to="/explore" className="text-ocean-400 hover:text-ocean-200 text-sm transition-colors">
               {t('nav.getStarted')}
             </Link>
             <Link to="/register-center" className="text-ocean-400 hover:text-ocean-200 text-sm transition-colors">
