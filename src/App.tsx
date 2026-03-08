@@ -10,6 +10,8 @@ import DiverLayout from "@/components/DiverLayout";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import SelectRole from "./pages/SelectRole";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminTrips from "./pages/admin/Trips";
