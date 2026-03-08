@@ -137,8 +137,16 @@ const RegisterCenter = () => {
     window.location.href = '/admin';
   };
 
+  const validateWhatsapp = (value: string) => {
+    if (!value) { setWhatsappError(''); return true; }
+    const valid = /^\+[1-9]\d{6,14}$/.test(value.replace(/\s/g, ''));
+    setWhatsappError(valid ? '' : t('validation.whatsapp'));
+    return valid;
+  };
+
   const handleCenterSetup = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (centerWhatsapp && !validateWhatsapp(centerWhatsapp)) return;
     await setupCenter();
   };
 
