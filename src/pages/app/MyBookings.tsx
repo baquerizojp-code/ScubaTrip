@@ -78,6 +78,24 @@ const MyBookings = () => {
     refetchInterval: 30000,
   });
 
+  // Realtime subscription for instant booking status updates
+  useEffect(() => {
+    const channel = supabase
+      .channel('my-bookings-realtime')
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'bookings' },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ['my-bookings'] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
+
   const handleCancel = async () => {
     if (!cancelId) return;
     setCancelling(true);
