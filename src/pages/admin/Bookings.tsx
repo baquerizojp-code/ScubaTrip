@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
-import { Check, X, CalendarCheck, Clock, Ban } from 'lucide-react';
+import { Check, X, CalendarCheck, Clock, Ban, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
