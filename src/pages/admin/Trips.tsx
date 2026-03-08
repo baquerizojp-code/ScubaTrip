@@ -27,7 +27,6 @@ import { toast } from 'sonner';
 import { Plus, Edit, Trash2, Eye, Ship } from 'lucide-react';
 import { format } from 'date-fns';
 import type { Database } from '@/integrations/supabase/types';
-import type { Database } from '@/integrations/supabase/types';
 
 type TripStatus = Database['public']['Enums']['trip_status'];
 type TripDifficulty = Database['public']['Enums']['trip_difficulty'];
