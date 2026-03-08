@@ -245,6 +245,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'diver.profile.emergency': 'Contacto de Emergencia',
     'diver.profile.saved': 'Perfil actualizado',
     'diver.profile.error': 'Error al guardar',
+    'explore.loginRequired': 'Necesitas crear una cuenta para reservar',
   },
   en: {
     // Nav
