@@ -201,9 +201,9 @@ const TripDetail = () => {
     setCancelling(false);
     setShowCancelDialog(false);
     if (error) {
-      toast({ title: t('diver.trip.bookError'), variant: 'destructive' });
+      toast.error(t('diver.trip.bookError'));
     } else {
-      toast({ title: t('diver.bookings.cancelled') });
+      toast.success(t('diver.bookings.cancelled'));
       setExistingBooking({ ...existingBooking, status: 'cancelled' });
     }
   };
