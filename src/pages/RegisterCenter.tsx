@@ -218,7 +218,12 @@ const RegisterCenter = () => {
               </div>
               <div>
                 <Label>WhatsApp</Label>
-                <Input value={centerWhatsapp} onChange={e => setCenterWhatsapp(e.target.value)} placeholder="+52 998 123 4567" />
+                <Input
+                  value={centerWhatsapp}
+                  onChange={e => { setCenterWhatsapp(e.target.value); validateWhatsapp(e.target.value); }}
+                  placeholder="+593 999 123 456"
+                />
+                {whatsappError && <p className="text-sm text-destructive mt-1">{whatsappError}</p>}
               </div>
               <Button type="submit" className="w-full bg-gradient-ocean text-primary-foreground hover:opacity-90" disabled={loading}>
                 {loading ? t('common.loading') : t('registerCenter.button')}
