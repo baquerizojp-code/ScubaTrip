@@ -12,6 +12,7 @@ interface AuthContextType {
   diveCenterId: string | null;
   loading: boolean;
   signOut: () => Promise<void>;
+  refreshRole: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
