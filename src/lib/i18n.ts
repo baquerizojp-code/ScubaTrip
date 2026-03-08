@@ -368,6 +368,11 @@ const translations: Record<Locale, Record<string, string>> = {
     'admin.settings.description': 'Description',
     'admin.settings.saved': 'Settings saved',
 
+    // Notifications
+    'notifications.title': 'Notifications',
+    'notifications.empty': 'No notifications',
+    'notifications.markAllRead': 'Mark all as read',
+
     // Common
     'common.loading': 'Loading...',
     'common.save': 'Save',
