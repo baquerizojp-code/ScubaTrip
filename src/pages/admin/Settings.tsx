@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { toast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { MapPin, Clock, Globe, Instagram, Facebook } from 'lucide-react';
 
 const WHATSAPP_REGEX = /^\+[1-9]\d{6,14}$/;
