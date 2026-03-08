@@ -27,6 +27,7 @@ import DiverProfile from "./pages/app/DiverProfile";
 import Explore from "./pages/Explore";
 import ExploreTrip from "./pages/ExploreTrip";
 import NotFound from "./pages/NotFound";
+import LogoPreview from "./pages/LogoPreview";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ const App = () => (
             <Route path="/" element={<Landing />} />
             <Route path="/explore" element={<Explore />} />
             <Route path="/explore/:id" element={<ExploreTrip />} />
+            <Route path="/logo-preview" element={<LogoPreview />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
