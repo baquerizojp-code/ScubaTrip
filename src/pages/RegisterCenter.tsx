@@ -89,10 +89,9 @@ const RegisterCenter = () => {
     if (!user) return;
     setLoading(true);
 
-    // Create role
+    // Create role via secure RPC (prevents privilege escalation)
     const { error: roleError } = await supabase
-      .from('user_roles')
-      .insert({ user_id: user.id, role: 'dive_center_admin' as const });
+      .rpc('assign_dive_center_admin_role', { _user_id: user.id });
 
     if (roleError) {
       toast.error(roleError.message);
