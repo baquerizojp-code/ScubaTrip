@@ -82,10 +82,11 @@ export function formatPhoneNumber(raw: string): string {
   const match = findCountryFormat(digits);
 
   if (!match) {
-    // Unknown country — just add + and group in chunks of 3
+    // Unknown country — cap at 15 digits (E.164 max) and group in chunks of 3
+    const capped = digits.slice(0, 15);
     const groups: string[] = [];
-    for (let i = 0; i < digits.length; i += 3) {
-      groups.push(digits.slice(i, i + 3));
+    for (let i = 0; i < capped.length; i += 3) {
+      groups.push(capped.slice(i, i + 3));
     }
     return '+' + groups.join(' ');
   }
