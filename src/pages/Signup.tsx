@@ -29,7 +29,8 @@ const Signup = () => {
       else if (role === 'diver') navigate('/app/discover', { replace: true });
       else navigate('/admin', { replace: true });
     } else if (user && !role) {
-      navigate('/complete-profile', { replace: true });
+      if (from) localStorage.setItem('pending_redirect', from);
+      navigate('/complete-profile', { replace: true, state: { from } });
     }
   }, [user, role]);
 
