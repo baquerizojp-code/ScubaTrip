@@ -24,7 +24,7 @@ const isSafeRedirect = (url: string): boolean => {
 };
 
 const CompleteProfile = () => {
-  const { user, role } = useAuth();
+  const { user, role, refreshRole, signOut } = useAuth();
   const { t } = useI18n();
   const navigate = useNavigate();
   const location = useLocation();
