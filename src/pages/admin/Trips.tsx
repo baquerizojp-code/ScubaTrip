@@ -128,10 +128,10 @@ const AdminTrips = () => {
       setDialogOpen(false);
       setEditingId(null);
       setForm(emptyForm);
-      toast({ title: editingId ? t('admin.trips.updated') : t('admin.trips.created') });
+      toast.success(editingId ? t('admin.trips.updated') : t('admin.trips.created'));
     },
     onError: (err: any) => {
-      toast({ title: 'Error', description: err.message, variant: 'destructive' });
+      toast.error(err.message || 'Error');
     },
   });
 
