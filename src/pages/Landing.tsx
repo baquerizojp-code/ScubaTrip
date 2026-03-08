@@ -50,8 +50,10 @@ const Landing = () => {
             className="w-full h-full object-cover object-center"
             loading="eager"
           />
-          {/* Stronger gradient for text readability */}
+        {/* Stronger gradient for text readability */}
           <div className="absolute inset-0 bg-gradient-to-t from-ocean-900 via-ocean-900/70 to-transparent" />
+          {/* Top gradient for navbar legibility */}
+          <div className="absolute inset-x-0 top-0 h-[120px] bg-gradient-to-b from-ocean-900/50 via-ocean-900/20 to-transparent" />
         </div>
 
         {/* Floating bubbles */}

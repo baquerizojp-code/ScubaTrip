@@ -35,7 +35,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
       }`}
     >
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
+        <Link to="/" className={`flex items-center gap-2 ${isTransparent ? 'drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]' : ''}`}>
           <ScubaMaskLogo className="w-7 h-9 text-primary-foreground" />
           <span className="text-lg font-bold text-primary-foreground">ScubaTrip</span>
         </Link>
