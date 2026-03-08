@@ -133,10 +133,8 @@ const RegisterCenter = () => {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-10 h-10 rounded-lg bg-gradient-ocean flex items-center justify-center">
-              <Waves className="w-6 h-6 text-primary-foreground" />
-            </div>
-            <span className="text-xl font-bold text-foreground">Scuba Planner</span>
+            <ScubaMaskLogo className="h-10 w-8 text-primary" />
+            <span className="text-xl font-bold text-foreground">ScubaTrip</span>
           </Link>
           <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mx-auto mb-4">
             <Building2 className="w-6 h-6 text-accent" />

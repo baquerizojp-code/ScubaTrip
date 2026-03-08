@@ -91,7 +91,8 @@ const AdminLayout = () => {
           <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(true)}>
             <Menu className="h-5 w-5" />
           </Button>
-          <span className="font-bold text-foreground flex-1">Scuba Planner</span>
+          <ScubaMaskLogo className="h-7 w-5 text-primary" />
+          <span className="font-bold text-foreground flex-1">ScubaTrip</span>
           <NotificationBell />
         </header>
 
