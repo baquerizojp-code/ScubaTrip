@@ -124,8 +124,14 @@ const AdminSettings = () => {
               <Label>WhatsApp</Label>
               <Input
                 value={whatsapp}
-                onChange={(e) => { setWhatsapp(e.target.value); validateWhatsapp(e.target.value); }}
-                placeholder="+593 999 123 456"
+                onChange={(e) => {
+                  const raw = e.target.value;
+                  if (raw && !/^[+\d\s]*$/.test(raw)) return;
+                  const formatted = raw.startsWith('+') ? formatPhoneNumber(raw) : raw;
+                  setWhatsapp(formatted);
+                  validateWhatsapp(formatted);
+                }}
+                placeholder="+593 993 055 690"
               />
               {whatsappError && <p className="text-sm text-destructive mt-1">{whatsappError}</p>}
             </div>
