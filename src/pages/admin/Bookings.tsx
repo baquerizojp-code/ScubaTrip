@@ -82,11 +82,56 @@ const AdminBookings = () => {
     },
   });
 
+  const approveCancellationMutation = useMutation({
+    mutationFn: async (bookingId: string) => {
+      // Find the booking to get trip_id for restoring available spots
+      const booking = bookings?.find(b => b.id === bookingId);
+      if (!booking) throw new Error('Booking not found');
+      
+      // Update status to cancelled
+      const { error: updateError } = await supabase
+        .from('bookings')
+        .update({ status: 'cancelled' })
+        .eq('id', bookingId);
+      if (updateError) throw updateError;
+      
+      // Restore available spot
+      const { error: tripError } = await supabase
+        .from('trips')
+        .update({ available_spots: (booking as any).trips?.available_spots + 1 || 1 })
+        .eq('id', booking.trip_id);
+      // Non-critical if this fails
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-bookings'] });
+      toast({ title: t('admin.bookings.cancellationApproved') });
+    },
+    onError: (err: any) => {
+      toast({ title: 'Error', description: err.message, variant: 'destructive' });
+    },
+  });
+
+  const denyCancellationMutation = useMutation({
+    mutationFn: async (bookingId: string) => {
+      const { error } = await supabase
+        .from('bookings')
+        .update({ status: 'confirmed' })
+        .eq('id', bookingId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-bookings'] });
+      toast({ title: t('admin.bookings.cancellationDenied') });
+    },
+  });
+
   const statusBadge = (status: string) => {
     const config: Record<string, { icon: typeof Clock; className: string }> = {
       pending: { icon: Clock, className: 'bg-warning/10 text-warning border-warning/20' },
       confirmed: { icon: Check, className: 'bg-primary/10 text-primary border-primary/20' },
       rejected: { icon: Ban, className: 'bg-destructive/10 text-destructive border-destructive/20' },
+      cancellation_requested: { icon: AlertTriangle, className: 'bg-orange-100 text-orange-800 border-orange-200' },
+      cancelled: { icon: X, className: 'bg-muted text-muted-foreground border-muted' },
     };
     const { icon: Icon, className } = config[status] || config.pending;
     return <Badge variant="outline" className={className}><Icon className="h-3 w-3 mr-1" />{status}</Badge>;
