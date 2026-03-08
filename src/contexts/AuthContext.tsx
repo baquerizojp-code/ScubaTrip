@@ -97,8 +97,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setDiveCenterId(null);
   };
 
+  const refreshRole = async () => {
+    if (user) await fetchUserRole(user.id);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, session, role, diveCenterId, loading, signOut }}>
+    <AuthContext.Provider value={{ user, session, role, diveCenterId, loading, signOut, refreshRole }}>
       {children}
     </AuthContext.Provider>
   );
