@@ -122,3 +122,15 @@ export function stripPhoneFormat(formatted: string): string {
   const digits = formatted.replace(/\D/g, '');
   return (hasPlus ? '+' : '') + digits;
 }
+
+/**
+ * Checks if a phone number has exactly the required digits for its country.
+ */
+export function isPhoneComplete(formatted: string): boolean {
+  if (!formatted || !formatted.startsWith('+')) return false;
+  const digits = formatted.replace(/\D/g, '');
+  const match = findCountryFormat(digits);
+  if (!match) return digits.length >= 7 && digits.length <= 15;
+  const localDigits = digits.slice(match.localStart);
+  return localDigits.length === match.format.totalLocal;
+}
