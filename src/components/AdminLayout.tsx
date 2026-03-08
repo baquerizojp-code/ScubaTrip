@@ -2,7 +2,7 @@ import { Link, useLocation, Outlet } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useI18n } from '@/lib/i18n';
 import { 
-  LayoutDashboard, CalendarCheck, Users, Settings, LogOut, Menu, X 
+  LayoutDashboard, Ship, CalendarCheck, Users, Settings, LogOut, Menu, X 
 } from 'lucide-react';
 import ScubaMaskLogo from '@/components/ScubaMaskLogo';
 import { Button } from '@/components/ui/button';
