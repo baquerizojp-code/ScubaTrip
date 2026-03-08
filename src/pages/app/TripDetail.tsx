@@ -63,7 +63,7 @@ const TripDetail = () => {
   const navigate = useNavigate();
   const { user, refreshRole } = useAuth();
   const { t } = useI18n();
-  const { toast } = useToast();
+  
 
   const [trip, setTrip] = useState<Trip | null>(null);
   const [loading, setLoading] = useState(true);

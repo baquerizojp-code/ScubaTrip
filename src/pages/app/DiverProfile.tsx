@@ -15,7 +15,7 @@ const certLevels = Constants.public.Enums.certification_level;
 const DiverProfile = () => {
   const { user } = useAuth();
   const { t } = useI18n();
-  const { toast } = useToast();
+  
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
