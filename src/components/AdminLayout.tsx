@@ -7,6 +7,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import NotificationBell from '@/components/NotificationBell';
 
 const AdminLayout = () => {
   const { signOut } = useAuth();
