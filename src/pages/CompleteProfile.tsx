@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Waves } from 'lucide-react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import ScubaMaskLogo from '@/components/ScubaMaskLogo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -94,9 +94,10 @@ const CompleteProfile = () => {
     <div className="min-h-screen flex items-center justify-center bg-muted px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="w-12 h-12 rounded-lg bg-gradient-ocean flex items-center justify-center mx-auto mb-4">
-            <Waves className="w-7 h-7 text-primary-foreground" />
-          </div>
+          <Link to="/" className="inline-flex items-center gap-2 mb-6">
+            <ScubaMaskLogo className="h-10 w-8 text-primary" />
+            <span className="text-xl font-bold text-foreground">ScubaTrip</span>
+          </Link>
           <h1 className="text-2xl font-bold text-foreground">{t('completeProfile.title')}</h1>
           <p className="text-muted-foreground mt-1">{t('completeProfile.subtitle')}</p>
         </div>
