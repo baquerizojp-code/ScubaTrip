@@ -95,14 +95,16 @@ const Landing = () => {
               </p>
 
               {/* CTA buttons — stacked on mobile */}
-              <div className="flex flex-col sm:flex-row gap-3 animate-fade-in" style={{ animationDelay: '0.24s' }}>
-                <Link to="/signup" className="w-full sm:w-auto">
-                  <Button size="lg" className="w-full sm:w-auto bg-primary-foreground text-ocean-700 hover:bg-ocean-100 font-semibold text-base px-7 shadow-ocean">
-                    {t('landing.hero.cta.diver')}
-                    <ChevronRight className="w-4 h-4 ml-1" />
-                  </Button>
-                </Link>
-                <Link to="/register-center" className="text-ocean-300/70 hover:text-ocean-100 text-sm underline underline-offset-4 transition-colors mt-1 sm:mt-0 sm:ml-2">
+              <div className="flex flex-col gap-3 animate-fade-in" style={{ animationDelay: '0.24s' }}>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Link to="/signup" className="w-full sm:w-auto">
+                    <Button size="lg" className="w-full sm:w-auto bg-primary-foreground text-ocean-700 hover:bg-ocean-100 font-semibold text-base px-7 shadow-ocean">
+                      {t('landing.hero.cta.diver')}
+                      <ChevronRight className="w-4 h-4 ml-1" />
+                    </Button>
+                  </Link>
+                </div>
+                <Link to="/register-center" className="text-ocean-300/70 hover:text-ocean-100 text-sm underline underline-offset-4 transition-colors">
                   {t('landing.hero.cta.center')}
                 </Link>
               </div>
