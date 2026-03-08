@@ -50,6 +50,24 @@ const AdminBookings = () => {
     enabled: !!diveCenterId,
   });
 
+  // Realtime: auto-refresh when bookings change
+  useEffect(() => {
+    const channel = supabase
+      .channel('admin-bookings-realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'bookings' },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ['admin-bookings'] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
+
   const confirmMutation = useMutation({
     mutationFn: async (bookingId: string) => {
       const { data, error } = await supabase.rpc('confirm_booking', { _booking_id: bookingId });
