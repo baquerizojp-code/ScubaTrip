@@ -10,6 +10,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 
+const isSafeRedirect = (url: string): boolean => {
+  return url.startsWith('/') && !url.startsWith('//');
+};
+
 const Signup = () => {
   const { t } = useI18n();
   const navigate = useNavigate();
@@ -21,7 +25,8 @@ const Signup = () => {
 
   const searchParams = new URLSearchParams(location.search);
   const redirectParam = searchParams.get('redirect');
-  const from = (location.state as any)?.from || redirectParam || null;
+  const rawFrom = (location.state as any)?.from || redirectParam || null;
+  const from = rawFrom && isSafeRedirect(rawFrom) ? rawFrom : null;
 
   useEffect(() => {
     if (user && role) {

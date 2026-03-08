@@ -85,7 +85,7 @@ const CompleteProfile = () => {
     toast.success(t('completeProfile.success'));
     const dest = pendingRedirect || '/app/discover';
     localStorage.removeItem('pending_redirect');
-    window.location.href = dest;
+    navigate(dest, { replace: true });
   };
 
   if (!user) return null;
