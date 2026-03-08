@@ -153,7 +153,7 @@ const Landing = () => {
               {t('landing.steps.badge')}
             </span>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">
-              {t('landing.steps.title')}
+              {t('landing.steps.title3')}
             </h2>
           </div>
 
