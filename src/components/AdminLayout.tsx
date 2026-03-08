@@ -7,6 +7,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import NotificationBell from '@/components/NotificationBell';
 
 const AdminLayout = () => {
   const { signOut } = useAuth();
@@ -42,11 +43,14 @@ const AdminLayout = () => {
         "fixed lg:static inset-y-0 left-0 z-50 w-64 bg-card border-r border-border flex flex-col transition-transform lg:translate-x-0",
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
-        <div className="p-6 border-b border-border">
+        <div className="p-6 border-b border-border flex items-center justify-between">
           <Link to="/admin" className="flex items-center gap-2">
             <Ship className="h-7 w-7 text-primary" />
             <span className="text-lg font-bold text-foreground">Scuba Planner</span>
           </Link>
+          <div className="hidden lg:block">
+            <NotificationBell />
+          </div>
         </div>
 
         <nav className="flex-1 p-4 space-y-1">
@@ -87,7 +91,8 @@ const AdminLayout = () => {
           <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(true)}>
             <Menu className="h-5 w-5" />
           </Button>
-          <span className="font-bold text-foreground">Scuba Planner</span>
+          <span className="font-bold text-foreground flex-1">Scuba Planner</span>
+          <NotificationBell />
         </header>
 
         <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-auto">

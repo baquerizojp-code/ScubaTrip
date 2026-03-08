@@ -158,6 +158,11 @@ const translations: Record<Locale, Record<string, string>> = {
     'admin.settings.description': 'Descripción',
     'admin.settings.saved': 'Configuración guardada',
 
+    // Notifications
+    'notifications.title': 'Notificaciones',
+    'notifications.empty': 'No tienes notificaciones',
+    'notifications.markAllRead': 'Marcar todas como leídas',
+
     // Common
     'common.loading': 'Cargando...',
     'common.save': 'Guardar',
@@ -362,6 +367,11 @@ const translations: Record<Locale, Record<string, string>> = {
     'admin.settings.name': 'Center Name',
     'admin.settings.description': 'Description',
     'admin.settings.saved': 'Settings saved',
+
+    // Notifications
+    'notifications.title': 'Notifications',
+    'notifications.empty': 'No notifications',
+    'notifications.markAllRead': 'Mark all as read',
 
     // Common
     'common.loading': 'Loading...',
