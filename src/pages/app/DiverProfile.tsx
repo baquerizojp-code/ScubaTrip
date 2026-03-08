@@ -58,7 +58,8 @@ const DiverProfile = () => {
       })
       .eq('user_id', user.id);
 
-    toast({ title: error ? t('diver.profile.error') : t('diver.profile.saved') });
+    if (error) toast.error(t('diver.profile.error'));
+    else toast.success(t('diver.profile.saved'));
     setSaving(false);
   };
 
