@@ -159,7 +159,7 @@ const Landing = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {steps.map((s, i) => (
-              <div key={s.num} className="relative text-center sm:text-left animate-slide-up" style={{ animationDelay: `${i * 0.1}s` }}>
+              <div key={s.num} className="relative text-center animate-slide-up flex flex-col items-center" style={{ animationDelay: `${i * 0.1}s` }}>
                 {i < steps.length - 1 && (
                   <div className="hidden lg:block absolute top-6 left-[60%] w-[80%] h-px bg-border" />
                 )}
