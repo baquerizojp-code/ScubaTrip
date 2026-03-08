@@ -55,6 +55,7 @@ const Signup = () => {
   };
 
   const handleGoogleSignup = async () => {
+    if (from) localStorage.setItem('pending_redirect', from);
     const { lovable } = await import('@/integrations/lovable');
     const result = await lovable.auth.signInWithOAuth('google', {
       redirect_uri: window.location.origin,
@@ -63,6 +64,7 @@ const Signup = () => {
   };
 
   const handleAppleSignup = async () => {
+    if (from) localStorage.setItem('pending_redirect', from);
     const { lovable } = await import('@/integrations/lovable');
     const result = await lovable.auth.signInWithOAuth('apple', {
       redirect_uri: window.location.origin,
