@@ -15,10 +15,9 @@ const features = [
 ];
 
 const steps = [
-  { num: '01', titleKey: 'landing.steps.signup.title', descKey: 'landing.steps.signup.desc', icon: Anchor },
-  { num: '02', titleKey: 'landing.steps.discover.title', descKey: 'landing.steps.discover.desc', icon: MapPin },
-  { num: '03', titleKey: 'landing.steps.book.title', descKey: 'landing.steps.book.desc', icon: CalendarCheck },
-  { num: '04', titleKey: 'landing.steps.dive.title', descKey: 'landing.steps.dive.desc', icon: Fish },
+  { num: '01', titleKey: 'landing.steps.discover.title', descKey: 'landing.steps.discover.desc', icon: MapPin },
+  { num: '02', titleKey: 'landing.steps.book.title', descKey: 'landing.steps.book.desc', icon: CalendarCheck },
+  { num: '03', titleKey: 'landing.steps.dive.title', descKey: 'landing.steps.dive.desc', icon: Fish },
 ];
 
 const Landing = () => {
