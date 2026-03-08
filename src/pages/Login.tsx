@@ -163,6 +163,9 @@ const Login = () => {
             <div>
               <Label htmlFor="password">{t('auth.password')}</Label>
               <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={isSignup ? 6 : undefined} />
+              {isSignup && password.length > 0 && password.length < 6 && (
+                <p className="text-xs text-destructive mt-1">{t('auth.reset.tooShort')}</p>
+              )}
             </div>
             {!isSignup && (
               <div className="flex items-center gap-2">
