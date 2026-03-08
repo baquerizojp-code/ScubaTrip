@@ -64,6 +64,7 @@ const AdminTrips = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<TripFormData>(emptyForm);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
     if (searchParams.get('new') === '1') {
