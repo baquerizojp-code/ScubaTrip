@@ -3,6 +3,7 @@ import { Compass, CalendarCheck, User, LogOut, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useI18n } from '@/lib/i18n';
+import NotificationBell from '@/components/NotificationBell';
 
 const DiverLayout = () => {
   const { pathname } = useLocation();
