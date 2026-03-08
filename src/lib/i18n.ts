@@ -311,6 +311,11 @@ const translations: Record<Locale, Record<string, string>> = {
     'admin.bookings.rejectPlaceholder': 'Reason for rejection (optional)',
     'admin.bookings.empty': 'No bookings in this category',
     'admin.bookings.noSpots': 'No spots available',
+    'admin.bookings.cancellationRequests': 'Cancellations',
+    'admin.bookings.approveCancellation': 'Approve',
+    'admin.bookings.denyCancellation': 'Deny',
+    'admin.bookings.cancellationApproved': 'Cancellation approved',
+    'admin.bookings.cancellationDenied': 'Cancellation denied, booking restored',
 
     'admin.staff.subtitle': 'Manage your center team',
     'admin.staff.invite': 'Invite',

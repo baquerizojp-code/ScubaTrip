@@ -243,9 +243,12 @@ const AdminBookings = () => {
       </div>
 
       <Tabs defaultValue={defaultTab}>
-        <TabsList>
+        <TabsList className="flex-wrap h-auto">
           <TabsTrigger value="pending" className="gap-1">
             <Clock className="h-3.5 w-3.5" /> {t('admin.bookings.pending')} ({filterBookings('pending').length})
+          </TabsTrigger>
+          <TabsTrigger value="cancellation_requested" className="gap-1">
+            <AlertTriangle className="h-3.5 w-3.5" /> {t('admin.bookings.cancellationRequests')} ({filterBookings('cancellation_requested').length})
           </TabsTrigger>
           <TabsTrigger value="confirmed" className="gap-1">
             <Check className="h-3.5 w-3.5" /> {t('admin.bookings.confirmedTab')} ({filterBookings('confirmed').length})
@@ -259,6 +262,7 @@ const AdminBookings = () => {
         </TabsList>
 
         <TabsContent value="pending">{renderTabContent('pending', true)}</TabsContent>
+        <TabsContent value="cancellation_requested">{renderTabContent('cancellation_requested', false, true)}</TabsContent>
         <TabsContent value="confirmed">{renderTabContent('confirmed', false)}</TabsContent>
         <TabsContent value="confirmed-month">{renderTabContent('confirmed-month', false)}</TabsContent>
         <TabsContent value="rejected">{renderTabContent('rejected', false)}</TabsContent>
