@@ -59,7 +59,7 @@ const AdminBookings = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-bookings'] });
-      toast({ title: t('admin.bookings.confirmed') });
+      toast.success(t('admin.bookings.confirmed'));
     },
     onError: (err: any) => {
       toast({ title: 'Error', description: err.message, variant: 'destructive' });
