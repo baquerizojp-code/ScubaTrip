@@ -42,11 +42,6 @@ const TripCard = ({ trip, linkTo, bookingStatus }: TripCardProps) => {
               <p className="text-sm opacity-90 mt-0.5">{trip.dive_centers?.name}</p>
             </div>
             <div className="flex flex-col items-end gap-1">
-              {trip.difficulty && (
-                <Badge className={difficultyColors[trip.difficulty] + ' text-xs'}>
-                  {trip.difficulty}
-                </Badge>
-              )}
               {bookingStatus && (
                 <Badge className={bookingStatusColors[bookingStatus] + ' text-xs border'}>
                   {bookingStatusLabels[bookingStatus]?.[locale] || bookingStatus}
