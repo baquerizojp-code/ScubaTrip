@@ -22,7 +22,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [transparent]);
 
-  const dashboardPath = role === 'diver' ? '/app/discover' : role ? '/admin' : '/select-role';
+  const dashboardPath = role === 'diver' ? '/app/discover' : role ? '/admin' : '/login';
 
   const isTransparent = transparent && !scrolled;
 
