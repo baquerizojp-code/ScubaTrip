@@ -5,7 +5,9 @@ import { Button } from '@/components/ui/button';
 import { useI18n } from '@/lib/i18n';
 import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/Navbar';
-import heroImage from '@/assets/hero-ocean.jpg';
+import heroImageWebp from '@/assets/hero-ocean.webp';
+import heroImageMobileWebp from '@/assets/hero-ocean-mobile.webp';
+import heroImageFallback from '@/assets/hero-ocean.jpg';
 
 const features = [
   { icon: Search, titleKey: 'landing.features.discover.title', descKey: 'landing.features.discover.desc' },
