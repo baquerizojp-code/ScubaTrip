@@ -286,6 +286,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'landing.features.manage.desc': 'Complete panel to manage trips, bookings, and staff',
     'landing.steps.badge': 'How it works',
     'landing.steps.title': 'Get started in 4 steps',
+    'landing.steps.title3': 'It\'s that easy',
     'landing.steps.signup.title': 'Create your account',
     'landing.steps.signup.desc': 'Sign up for free in seconds',
     'landing.steps.discover.title': 'Explore trips',
