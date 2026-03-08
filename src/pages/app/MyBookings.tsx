@@ -43,6 +43,7 @@ const statusBadge: Record<string, string> = {
   confirmed: 'bg-green-100 text-green-800',
   rejected: 'bg-red-100 text-red-800',
   cancelled: 'bg-muted text-muted-foreground',
+  cancellation_requested: 'bg-orange-100 text-orange-800',
 };
 
 const MyBookings = () => {
