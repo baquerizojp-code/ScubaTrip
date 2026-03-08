@@ -105,7 +105,7 @@ const RegisterCenter = () => {
       .from('dive_centers')
       .insert({
         name: centerName,
-        whatsapp_number: centerWhatsapp || null,
+        whatsapp_number: centerWhatsapp ? stripPhoneFormat(centerWhatsapp) : null,
         created_by: user.id,
       })
       .select()
