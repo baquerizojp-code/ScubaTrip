@@ -42,11 +42,12 @@ const App = () => (
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/select-role" element={
+            <Route path="/complete-profile" element={
               <ProtectedRoute skipRoleCheck>
-                <SelectRole />
+                <CompleteProfile />
               </ProtectedRoute>
             } />
+            <Route path="/register-center" element={<RegisterCenter />} />
 
             {/* Admin routes with shared layout */}
             <Route path="/admin" element={

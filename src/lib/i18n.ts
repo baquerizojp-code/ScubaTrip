@@ -287,8 +287,34 @@ const translations: Record<Locale, Record<string, string>> = {
     'landing.steps.dive.desc': 'Enjoy your underwater adventure',
     'landing.cta.title': 'Ready to dive in?',
     'landing.cta.subtitle': 'Join hundreds of divers already planning their dives with us',
-    'landing.cta.diver': 'Create Diver Account',
+    'landing.cta.diver': 'Create Free Account',
     'landing.cta.center': 'Register My Center',
+
+    // Complete Profile
+    'completeProfile.title': 'Complete your profile',
+    'completeProfile.subtitle': 'Tell us about yourself to personalize your experience',
+    'completeProfile.button': 'Start Exploring',
+    'completeProfile.success': 'Profile created! Welcome to Scuba Planner',
+
+    // Register Center
+    'registerCenter.title': 'Register Your Dive Center',
+    'registerCenter.subtitle': 'Manage trips, bookings, and connect with divers',
+    'registerCenter.centerInfo': 'Center details',
+    'registerCenter.descPlaceholder': 'Explore the Caribbean with us...',
+    'registerCenter.button': 'Register Center',
+    'registerCenter.success': 'Center created successfully!',
+    'registerCenter.checkEmail': 'Check your email to confirm your account',
+    'registerCenter.diverLink': 'Are you a diver? Create a diver account',
+
+    // Certification labels
+    'profile.cert.none': 'No certification',
+    'profile.cert.openWater': 'Open Water',
+    'profile.cert.advanced': 'Advanced Open Water',
+    'profile.cert.rescue': 'Rescue Diver',
+    'profile.cert.divemaster': 'Divemaster',
+    'profile.cert.instructor': 'Instructor',
+
+    'common.optional': 'optional',
 
     // Auth
     'auth.login.title': 'Welcome back',
