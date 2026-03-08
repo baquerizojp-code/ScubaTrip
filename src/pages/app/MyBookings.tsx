@@ -162,7 +162,7 @@ const MyBookings = () => {
           </TabsList>
           <TabsContent value="confirmed" className="mt-4">{renderList(['confirmed'])}</TabsContent>
           <TabsContent value="pending" className="mt-4">{renderList(['pending'])}</TabsContent>
-          <TabsContent value="other" className="mt-4">{renderList(['rejected', 'cancelled'])}</TabsContent>
+          <TabsContent value="other" className="mt-4">{renderList(['rejected', 'cancelled', 'cancellation_requested'])}</TabsContent>
         </Tabs>
       )}
 
