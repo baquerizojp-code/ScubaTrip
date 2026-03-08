@@ -123,18 +123,13 @@ const AdminSettings = () => {
             </div>
             <div>
               <Label>WhatsApp</Label>
-              <Input
+              <PhoneInput
                 value={whatsapp}
-                onChange={(e) => {
-                  const raw = e.target.value;
-                  if (raw && !/^[+\d\s]*$/.test(raw)) return;
-                  const formatted = raw.startsWith('+') ? formatPhoneNumber(raw) : raw;
-                  setWhatsapp(formatted);
-                  validateWhatsapp(formatted);
-                }}
+                onChange={setWhatsapp}
+                onValidate={validateWhatsapp}
                 placeholder="+593 993 055 690"
+                error={whatsappError}
               />
-              {whatsappError && <p className="text-sm text-destructive mt-1">{whatsappError}</p>}
             </div>
           </CardContent>
         </Card>
