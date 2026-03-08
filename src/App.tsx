@@ -53,7 +53,7 @@ const App = () => (
               <Route path="/explore/:id" element={<ExploreTrip />} />
               
               <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
+              <Route path="/signup" element={<Login />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/complete-profile" element={
