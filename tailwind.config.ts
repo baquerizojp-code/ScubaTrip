@@ -75,6 +75,14 @@ export default {
           400: "hsl(var(--teal-400))",
           500: "hsl(var(--teal-500))",
         },
+        "cyan-electric": {
+          DEFAULT: "hsl(var(--cyan-electric))",
+          foreground: "hsl(var(--cyan-electric-foreground))",
+        },
+        coral: {
+          DEFAULT: "hsl(var(--coral))",
+          foreground: "hsl(var(--coral-foreground))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

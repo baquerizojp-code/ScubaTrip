@@ -45,10 +45,15 @@
     --ocean-600: 201 100% 28%;
     --ocean-700: 201 100% 20%;
     --ocean-800: 201 80% 14%;
-    --ocean-900: 201 60% 8%;
+    --ocean-900: 207 63% 10%;
 
     --teal-400: 193 100% 42%;
     --teal-500: 193 100% 35%;
+
+    --cyan-electric: 187 100% 50%;
+    --cyan-electric-foreground: 207 63% 10%;
+    --coral: 0 100% 70%;
+    --coral-foreground: 0 0% 100%;
 
     --success: 160 60% 45%;
     --success-foreground: 0 0% 100%;

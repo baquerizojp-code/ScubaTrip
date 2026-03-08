@@ -14,12 +14,6 @@ const features = [
   { icon: Settings, titleKey: 'landing.features.manage.title', descKey: 'landing.features.manage.desc' },
 ];
 
-const stats = [
-  { value: '50+', labelKey: 'landing.stats.sites' },
-  { value: '200+', labelKey: 'landing.stats.divers' },
-  { value: '4.9', labelKey: 'landing.stats.rating', icon: Star },
-];
-
 const steps = [
   { num: '01', titleKey: 'landing.steps.signup.title', descKey: 'landing.steps.signup.desc', icon: Anchor },
   { num: '02', titleKey: 'landing.steps.discover.title', descKey: 'landing.steps.discover.desc', icon: MapPin },
@@ -44,7 +38,7 @@ const Landing = () => {
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
-      <Navbar />
+      <Navbar transparent />
 
       {/* Hero — full viewport, mobile-first */}
       <section className="relative min-h-[100svh] flex items-end sm:items-center overflow-hidden">
@@ -56,10 +50,11 @@ const Landing = () => {
             className="w-full h-full object-cover object-center"
             loading="eager"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-ocean-900 via-ocean-900/60 to-ocean-900/20" />
+          {/* Stronger gradient for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-ocean-900 via-ocean-900/70 to-transparent" />
         </div>
 
-        {/* Floating bubbles — subtle depth cue */}
+        {/* Floating bubbles */}
         {[...Array(5)].map((_, i) => (
           <div
             key={i}
@@ -75,13 +70,13 @@ const Landing = () => {
           />
         ))}
 
-        {/* Hero content */}
-        <div className="relative w-full pb-16 pt-24 sm:pb-0 sm:pt-20">
+        {/* Hero content — reduced padding to push above fold */}
+        <div className="relative w-full pb-12 pt-16 sm:pb-0 sm:pt-20">
           <div className="container mx-auto px-5 sm:px-6">
             <div className="max-w-lg sm:max-w-2xl">
               {/* Badge */}
               <div className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/20 px-3 py-1.5 mb-5 animate-fade-in">
-                <Anchor className="w-3.5 h-3.5 text-teal-400" />
+                <Anchor className="w-3.5 h-3.5 text-cyan-electric" />
                 <span className="text-xs font-medium text-ocean-200 tracking-wide uppercase">
                   {t('landing.hero.badge')}
                 </span>
@@ -94,22 +89,27 @@ const Landing = () => {
                 {t('landing.hero.subtitle')}
               </p>
 
-              {/* CTA buttons — stacked on mobile */}
+              {/* CTA buttons */}
               <div className="flex flex-col gap-3 animate-fade-in" style={{ animationDelay: '0.24s' }}>
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-col gap-3">
                   <Link to="/signup" className="w-full sm:w-auto">
-                    <Button size="lg" className="w-full sm:w-auto bg-primary-foreground text-ocean-700 hover:bg-ocean-100 font-semibold text-base px-7 shadow-ocean">
+                    <Button size="lg" className="w-full sm:w-auto bg-cyan-electric text-cyan-electric-foreground hover:bg-cyan-electric/85 font-semibold text-base px-7">
                       {t('landing.hero.cta.diver')}
                       <ChevronRight className="w-4 h-4 ml-1" />
                     </Button>
                   </Link>
+                  <Link to="/register-center" className="w-full sm:w-auto">
+                    <Button
+                      size="lg"
+                      variant="hero-outline"
+                      className="w-full sm:w-auto text-sm px-6"
+                    >
+                      {t('landing.hero.cta.center')}
+                    </Button>
+                  </Link>
                 </div>
-                <Link to="/register-center" className="text-ocean-300/70 hover:text-ocean-100 text-sm underline underline-offset-4 transition-colors">
-                  {t('landing.hero.cta.center')}
-                </Link>
               </div>
             </div>
-
           </div>
         </div>
       </section>
@@ -144,7 +144,7 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* How it works — numbered steps */}
+      {/* How it works */}
       <section className="py-16 sm:py-24 bg-muted/50">
         <div className="container mx-auto px-5 sm:px-6">
           <div className="text-center mb-10 sm:mb-14">
@@ -159,7 +159,6 @@ const Landing = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
             {steps.map((s, i) => (
               <div key={s.num} className="relative text-center sm:text-left animate-slide-up" style={{ animationDelay: `${i * 0.1}s` }}>
-                {/* Connector line — hidden on mobile & last item */}
                 {i < steps.length - 1 && (
                   <div className="hidden lg:block absolute top-6 left-[60%] w-[80%] h-px bg-border" />
                 )}
@@ -176,8 +175,7 @@ const Landing = () => {
       </section>
 
       {/* CTA section */}
-      <section className="py-16 sm:py-24 bg-gradient-ocean relative overflow-hidden">
-        {/* Decorative circles */}
+      <section className="py-16 sm:py-24 bg-ocean-900 relative overflow-hidden">
         <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-primary-foreground/5" />
         <div className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-primary-foreground/5" />
 
@@ -188,15 +186,21 @@ const Landing = () => {
           <p className="text-ocean-200/80 text-base sm:text-lg mb-8 max-w-md mx-auto">
             {t('landing.cta.subtitle')}
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <Link to="/signup" className="w-full sm:w-auto">
-              <Button size="lg" className="w-full sm:w-auto bg-primary-foreground text-ocean-700 hover:bg-ocean-100 font-semibold px-8">
+              <Button size="lg" className="w-full sm:w-auto bg-cyan-electric text-cyan-electric-foreground hover:bg-cyan-electric/85 font-semibold px-8">
                 {t('landing.cta.diver')}
                 <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             </Link>
-            <Link to="/register-center" className="text-ocean-200/60 hover:text-ocean-100 text-sm underline underline-offset-4 transition-colors mt-1">
-              {t('landing.cta.center')}
+            <Link to="/register-center" className="w-full sm:w-auto">
+              <Button
+                size="lg"
+                variant="hero-outline"
+                className="w-full sm:w-auto text-sm px-6"
+              >
+                {t('landing.cta.center')}
+              </Button>
             </Link>
           </div>
         </div>

@@ -1,23 +1,43 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Globe, Waves, User } from 'lucide-react';
+import { Globe, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/lib/i18n';
 import { useAuth } from '@/contexts/AuthContext';
+import ScubaMaskLogo from '@/components/ScubaMaskLogo';
 
-const Navbar = () => {
+interface NavbarProps {
+  transparent?: boolean;
+}
+
+const Navbar = ({ transparent = false }: NavbarProps) => {
   const { t, locale, setLocale } = useI18n();
   const { user, role } = useAuth();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    if (!transparent) return;
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [transparent]);
 
   const dashboardPath = role === 'diver' ? '/app/discover' : role ? '/admin' : '/select-role';
 
+  const isTransparent = transparent && !scrolled;
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-md border-b border-border px-safe">
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-safe ${
+        isTransparent
+          ? 'bg-transparent border-b border-transparent'
+          : 'bg-ocean-900/90 backdrop-blur-md border-b border-white/10'
+      }`}
+    >
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-lg bg-gradient-ocean flex items-center justify-center">
-            <Waves className="w-5 h-5 text-primary-foreground" />
-          </div>
-          <span className="text-lg font-bold text-foreground">ScubaTrip</span>
+          <ScubaMaskLogo className="w-7 h-9 text-primary-foreground" />
+          <span className="text-lg font-bold text-primary-foreground">ScubaTrip</span>
         </Link>
 
         <div className="flex items-center gap-1 sm:gap-2">
@@ -25,29 +45,35 @@ const Navbar = () => {
             variant="ghost"
             size="sm"
             onClick={() => setLocale(locale === 'es' ? 'en' : 'es')}
-            className="gap-1 text-muted-foreground px-2 sm:px-3">
-            
+            className="gap-1 text-primary-foreground/70 hover:text-primary-foreground hover:bg-white/10 px-2 sm:px-3"
+          >
             <Globe className="w-4 h-4" />
             <span className="hidden sm:inline">{t('nav.language')}</span>
           </Button>
-          {user ?
-          <Link to={dashboardPath}>
-              <Button size="sm" className="bg-gradient-ocean text-primary-foreground hover:opacity-90 shadow-ocean text-xs sm:text-sm px-3 sm:px-4 gap-1">
+          {user ? (
+            <Link to={dashboardPath}>
+              <Button
+                size="sm"
+                className="bg-cyan-electric text-cyan-electric-foreground hover:bg-cyan-electric/85 font-semibold text-xs sm:text-sm px-3 sm:px-4 gap-1 min-h-[44px] min-w-[44px]"
+              >
                 <User className="w-4 h-4" />
                 {t('nav.dashboard')}
               </Button>
-            </Link> :
-
-          <Link to="/signup">
-              <Button size="sm" className="bg-gradient-ocean text-primary-foreground hover:opacity-90 shadow-ocean text-xs sm:text-sm px-3 sm:px-4">
+            </Link>
+          ) : (
+            <Link to="/signup">
+              <Button
+                size="sm"
+                className="bg-cyan-electric text-cyan-electric-foreground hover:bg-cyan-electric/85 font-semibold text-xs sm:text-sm px-3 sm:px-4 min-h-[44px] min-w-[44px]"
+              >
                 {t('nav.getStarted')}
               </Button>
             </Link>
-          }
+          )}
         </div>
       </div>
-    </nav>);
-
+    </nav>
+  );
 };
 
 export default Navbar;
