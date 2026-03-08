@@ -9,6 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useI18n } from '@/lib/i18n';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { formatPhoneNumber, stripPhoneFormat } from '@/lib/phoneFormat';
 
 const PENDING_CENTER_KEY = 'pending_center_signup';
 
@@ -104,7 +105,7 @@ const RegisterCenter = () => {
       .from('dive_centers')
       .insert({
         name: centerName,
-        whatsapp_number: centerWhatsapp || null,
+        whatsapp_number: centerWhatsapp ? stripPhoneFormat(centerWhatsapp) : null,
         created_by: user.id,
       })
       .select()
@@ -216,8 +217,15 @@ const RegisterCenter = () => {
                 <Label>WhatsApp</Label>
                 <Input
                   value={centerWhatsapp}
-                  onChange={e => { setCenterWhatsapp(e.target.value); validateWhatsapp(e.target.value); }}
-                  placeholder="+593 999 123 456"
+                  onChange={e => {
+                    const raw = e.target.value;
+                    // Only allow +, digits, and spaces
+                    if (raw && !/^[+\d\s]*$/.test(raw)) return;
+                    const formatted = raw.startsWith('+') ? formatPhoneNumber(raw) : raw;
+                    setCenterWhatsapp(formatted);
+                    validateWhatsapp(formatted);
+                  }}
+                  placeholder="+593 993 055 690"
                 />
                 {whatsappError && <p className="text-sm text-destructive mt-1">{whatsappError}</p>}
               </div>

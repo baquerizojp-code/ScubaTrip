@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { MapPin, Clock, Globe, Instagram, Facebook } from 'lucide-react';
+import { formatPhoneNumber, stripPhoneFormat } from '@/lib/phoneFormat';
 
 const WHATSAPP_REGEX = /^\+[1-9]\d{6,14}$/;
 
@@ -48,7 +49,7 @@ const AdminSettings = () => {
     if (center) {
       setName(center.name);
       setDescription(center.description || '');
-      setWhatsapp(center.whatsapp_number || '');
+      setWhatsapp(center.whatsapp_number ? formatPhoneNumber(center.whatsapp_number) : '');
       setLocation((center as any).location || '');
       setOperatingHours((center as any).operating_hours || '');
       setWebsite((center as any).website || '');
@@ -72,7 +73,7 @@ const AdminSettings = () => {
         .update({
           name,
           description,
-          whatsapp_number: whatsapp || null,
+          whatsapp_number: whatsapp ? stripPhoneFormat(whatsapp) : null,
           location: location || null,
           operating_hours: operatingHours || null,
           website: website || null,
@@ -123,8 +124,14 @@ const AdminSettings = () => {
               <Label>WhatsApp</Label>
               <Input
                 value={whatsapp}
-                onChange={(e) => { setWhatsapp(e.target.value); validateWhatsapp(e.target.value); }}
-                placeholder="+593 999 123 456"
+                onChange={(e) => {
+                  const raw = e.target.value;
+                  if (raw && !/^[+\d\s]*$/.test(raw)) return;
+                  const formatted = raw.startsWith('+') ? formatPhoneNumber(raw) : raw;
+                  setWhatsapp(formatted);
+                  validateWhatsapp(formatted);
+                }}
+                placeholder="+593 993 055 690"
               />
               {whatsappError && <p className="text-sm text-destructive mt-1">{whatsappError}</p>}
             </div>
