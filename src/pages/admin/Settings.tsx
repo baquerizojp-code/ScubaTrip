@@ -49,7 +49,7 @@ const AdminSettings = () => {
     if (center) {
       setName(center.name);
       setDescription(center.description || '');
-      setWhatsapp(center.whatsapp_number || '');
+      setWhatsapp(center.whatsapp_number ? formatPhoneNumber(center.whatsapp_number) : '');
       setLocation((center as any).location || '');
       setOperatingHours((center as any).operating_hours || '');
       setWebsite((center as any).website || '');
