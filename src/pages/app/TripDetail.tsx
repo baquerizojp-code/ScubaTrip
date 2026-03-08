@@ -118,9 +118,9 @@ const TripDetail = () => {
     });
 
     if (error) {
-      toast({ title: t('diver.trip.bookError'), variant: 'destructive' });
+      toast.error(t('diver.trip.bookError'));
     } else {
-      toast({ title: t('diver.trip.booked') });
+      toast.success(t('diver.trip.booked'));
       const { data: bk } = await supabase
         .from('bookings')
         .select('*')
