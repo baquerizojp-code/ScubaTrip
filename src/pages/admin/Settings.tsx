@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { MapPin, Clock, Globe, Instagram, Facebook } from 'lucide-react';
 import { formatPhoneNumber, stripPhoneFormat } from '@/lib/phoneFormat';
+import PhoneInput from '@/components/PhoneInput';
 
 const WHATSAPP_REGEX = /^\+[1-9]\d{6,14}$/;
 
@@ -122,18 +123,13 @@ const AdminSettings = () => {
             </div>
             <div>
               <Label>WhatsApp</Label>
-              <Input
+              <PhoneInput
                 value={whatsapp}
-                onChange={(e) => {
-                  const raw = e.target.value;
-                  if (raw && !/^[+\d\s]*$/.test(raw)) return;
-                  const formatted = raw.startsWith('+') ? formatPhoneNumber(raw) : raw;
-                  setWhatsapp(formatted);
-                  validateWhatsapp(formatted);
-                }}
+                onChange={setWhatsapp}
+                onValidate={validateWhatsapp}
                 placeholder="+593 993 055 690"
+                error={whatsappError}
               />
-              {whatsappError && <p className="text-sm text-destructive mt-1">{whatsappError}</p>}
             </div>
           </CardContent>
         </Card>

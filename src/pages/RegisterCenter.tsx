@@ -9,7 +9,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useI18n } from '@/lib/i18n';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { formatPhoneNumber, stripPhoneFormat } from '@/lib/phoneFormat';
+import { stripPhoneFormat } from '@/lib/phoneFormat';
+import PhoneInput from '@/components/PhoneInput';
 
 const PENDING_CENTER_KEY = 'pending_center_signup';
 
@@ -215,19 +216,13 @@ const RegisterCenter = () => {
               </div>
               <div>
                 <Label>WhatsApp</Label>
-                <Input
+                <PhoneInput
                   value={centerWhatsapp}
-                  onChange={e => {
-                    const raw = e.target.value;
-                    // Only allow +, digits, and spaces
-                    if (raw && !/^[+\d\s]*$/.test(raw)) return;
-                    const formatted = raw.startsWith('+') ? formatPhoneNumber(raw) : raw;
-                    setCenterWhatsapp(formatted);
-                    validateWhatsapp(formatted);
-                  }}
+                  onChange={setCenterWhatsapp}
+                  onValidate={validateWhatsapp}
                   placeholder="+593 993 055 690"
+                  error={whatsappError}
                 />
-                {whatsappError && <p className="text-sm text-destructive mt-1">{whatsappError}</p>}
               </div>
               <Button type="submit" className="w-full bg-gradient-ocean text-primary-foreground hover:opacity-90" disabled={loading}>
                 {loading ? t('common.loading') : t('registerCenter.button')}
