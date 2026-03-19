@@ -362,6 +362,27 @@ const TripDetail = () => {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+                {trip.whatsapp_group_url ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-2 text-green-600 border-green-300 hover:bg-green-50 hover:text-green-700"
+                    onClick={() => window.open(trip.whatsapp_group_url!, '_blank')}
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    {t('diver.trip.joinWhatsApp')}
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-2"
+                    disabled
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    {t('diver.trip.whatsAppPending')}
+                  </Button>
+                )}
                 <Button
                   variant="outline"
                   size="sm"

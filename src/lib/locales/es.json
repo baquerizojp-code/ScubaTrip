@@ -229,6 +229,8 @@
   "diver.profile.emergency": "Contacto de Emergencia",
   "diver.profile.saved": "Perfil actualizado",
   "diver.profile.error": "Error al guardar",
+  "diver.trip.joinWhatsApp": "Unirse al grupo de WhatsApp",
+  "diver.trip.whatsAppPending": "Enlace del grupo aún no disponible",
   "explore.loginRequired": "Necesitas crear una cuenta para reservar",
   "auth.useAnotherAccount": "Usar otra cuenta"
 }
