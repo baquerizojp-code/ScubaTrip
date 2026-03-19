@@ -35,6 +35,7 @@ interface BookingWithTrip {
     dive_site: string;
     trip_date: string;
     trip_time: string;
+    whatsapp_group_url: string | null;
     dive_centers: { name: string } | null;
   } | null;
 }
