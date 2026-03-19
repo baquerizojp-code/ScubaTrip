@@ -1,73 +1,55 @@
-# Welcome to your Lovable project
+# ScubaTrip
 
-## Project info
+A modern platform for managing scuba diving trips, bookings, and dive centers.
 
-**URL**: https://lovable.dev/projects/e25c9e9a-5530-42e0-9c8d-d620c7d93549
+## Technologies
 
-## How can I edit this code?
+- **Frontend**: React with Vite
+- **Styling**: Tailwind CSS & shadcn/ui
+- **Backend**: Supabase (Authentication & PostgreSQL Database)
+- **State Management**: React Query & Zustand
+- **Internationalization**: Custom i18n implementation
 
-There are several ways of editing your application.
+## Getting Started
 
-**Use Lovable**
+### Prerequisites
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e25c9e9a-5530-42e0-9c8d-d620c7d93549) and start prompting.
+- Node.js (v18 or higher)
+- npm or bun
 
-Changes made via Lovable will be committed automatically to this repo.
+### Setup
 
-**Use your preferred IDE**
+1.  **Clone the repository**:
+    ```bash
+    git clone <repository-url>
+    cd ScubaTrip
+    ```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+3.  **Configure Environment Variables**:
+    Create a `.env` file in the root directory and add your Supabase credentials:
+    ```env
+    VITE_SUPABASE_URL=your_supabase_url
+    VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+    ```
 
-Follow these steps:
+4.  **Run the development server**:
+    ```bash
+    npm run dev
+    ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Project Structure
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- `src/components`: Reusable UI components.
+- `src/pages`: Application pages and route components.
+- `src/contexts`: React contexts for global state (e.g., Auth).
+- `src/integrations`: Supabase client and types.
+- `src/lib`: Utility functions and i18n configuration.
 
-# Step 3: Install the necessary dependencies.
-npm i
+## Deployment
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+The application can be deployed to any static site hosting provider (Vercel, Netlify, GitHub Pages, etc.) by connecting your repository and setting the build command to `npm run build` and the output directory to `dist`.
