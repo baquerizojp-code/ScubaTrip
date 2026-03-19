@@ -46,20 +46,24 @@ const RegisterCenter = () => {
 
   const handleGoogleSignup = async () => {
     localStorage.setItem(PENDING_CENTER_KEY, 'true');
-    const { lovable } = await import('@/integrations/lovable');
-    const result = await lovable.auth.signInWithOAuth('google', {
-      redirect_uri: window.location.origin + '/register-center',
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin + '/register-center',
+      }
     });
-    if (result?.error) toast.error(String(result.error));
+    if (error) toast.error(error.message);
   };
 
   const handleAppleSignup = async () => {
     localStorage.setItem(PENDING_CENTER_KEY, 'true');
-    const { lovable } = await import('@/integrations/lovable');
-    const result = await lovable.auth.signInWithOAuth('apple', {
-      redirect_uri: window.location.origin + '/register-center',
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'apple',
+      options: {
+        redirectTo: window.location.origin + '/register-center',
+      }
     });
-    if (result?.error) toast.error(String(result.error));
+    if (error) toast.error(error.message);
   };
 
   const handleEmailSignup = async (e: React.FormEvent) => {
