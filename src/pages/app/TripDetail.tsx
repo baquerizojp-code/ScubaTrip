@@ -345,23 +345,7 @@ const TripDetail = () => {
 
             {/* Actions for confirmed bookings */}
             {isConfirmed && (
-              <div className="flex flex-col sm:flex-row gap-2 pt-2">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="gap-2">
-                      <CalendarPlus className="w-4 h-4" />
-                      {t('diver.trip.addToCalendar')}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem onClick={() => handleAddToCalendar('google')}>
-                      Google Calendar
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleAddToCalendar('ics')}>
-                      Apple Calendar / iCal
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 pt-2">
                 {trip.whatsapp_group_url ? (
                   <Button
                     variant="outline"
@@ -383,6 +367,22 @@ const TripDetail = () => {
                     {t('diver.trip.whatsAppPending')}
                   </Button>
                 )}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <CalendarPlus className="w-4 h-4" />
+                      {t('diver.trip.addToCalendar')}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem onClick={() => handleAddToCalendar('google')}>
+                      Google Calendar
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleAddToCalendar('ics')}>
+                      Apple Calendar / iCal
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 <Button
                   variant="outline"
                   size="sm"

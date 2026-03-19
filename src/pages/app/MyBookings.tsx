@@ -19,7 +19,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Calendar, MapPin, ChevronRight, X } from 'lucide-react';
+import { Calendar, MapPin, ChevronRight, X, MessageCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 
@@ -35,6 +35,7 @@ interface BookingWithTrip {
     dive_site: string;
     trip_date: string;
     trip_time: string;
+    whatsapp_group_url: string | null;
     dive_centers: { name: string } | null;
   } | null;
 }
@@ -67,7 +68,7 @@ const MyBookings = () => {
 
       const { data, error } = await supabase
         .from('bookings')
-        .select('id, status, notes, rejection_reason, created_at, trips(id, title, dive_site, trip_date, trip_time, dive_centers(name))')
+        .select('id, status, notes, rejection_reason, created_at, trips(id, title, dive_site, trip_date, trip_time, whatsapp_group_url, dive_centers(name))')
         .eq('diver_id', profile.id)
         .order('created_at', { ascending: false });
 
@@ -135,8 +136,38 @@ const MyBookings = () => {
                     {b.rejection_reason && (
                       <p className="text-xs text-destructive mt-1">{b.rejection_reason}</p>
                     )}
+                    {b.status === 'confirmed' && (
+                      <div className="mt-2">
+                        {b.trips?.whatsapp_group_url ? (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="gap-1.5 text-green-600 border-green-300 hover:bg-green-50 hover:text-green-700 h-7 text-xs"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              window.open(b.trips!.whatsapp_group_url!, '_blank');
+                            }}
+                          >
+                            <MessageCircle className="w-3.5 h-3.5" />
+                            {t('diver.trip.joinWhatsApp')}
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="gap-1.5 h-7 text-xs"
+                            disabled
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                          >
+                            <MessageCircle className="w-3.5 h-3.5" />
+                            {t('diver.trip.whatsAppPending')}
+                          </Button>
+                        )}
+                      </div>
+                    )}
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 shrink-0">
                     <Badge className={statusBadge[b.status]}>{t(`diver.trip.status${b.status.charAt(0).toUpperCase() + b.status.slice(1)}`)}</Badge>
                     {b.status === 'pending' && (
                       <Button
