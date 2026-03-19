@@ -42,7 +42,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { MapPin, Calendar, Clock, Users, DollarSign, ArrowLeft, Shield, Wrench, CalendarPlus, XCircle } from 'lucide-react';
+import { MapPin, Calendar, Clock, Users, DollarSign, ArrowLeft, Shield, Wrench, CalendarPlus, XCircle, MessageCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { downloadICSFile, getGoogleCalendarUrl } from '@/lib/calendar';
 import type { Tables } from '@/integrations/supabase/types';
