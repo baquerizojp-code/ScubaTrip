@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useI18n } from '@/lib/i18n';
-import { supabase } from '@/integrations/supabase/client';
+import { fetchDiveCenter, updateDiveCenter } from '@/services/profiles';
+import { diveCenterSchema } from '@/lib/schemas';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -33,16 +34,7 @@ const AdminSettings = () => {
 
   const { data: center } = useQuery({
     queryKey: ['dive-center', diveCenterId],
-    queryFn: async () => {
-      if (!diveCenterId) return null;
-      const { data, error } = await supabase
-        .from('dive_centers')
-        .select('*')
-        .eq('id', diveCenterId)
-        .single();
-      if (error) throw error;
-      return data;
-    },
+    queryFn: () => fetchDiveCenter(diveCenterId!),
     enabled: !!diveCenterId,
   });
 
@@ -51,12 +43,12 @@ const AdminSettings = () => {
       setName(center.name);
       setDescription(center.description || '');
       setWhatsapp(center.whatsapp_number ? formatPhoneNumber(center.whatsapp_number) : '');
-      setLocation((center as any).location || '');
-      setOperatingHours((center as any).operating_hours || '');
-      setWebsite((center as any).website || '');
-      setInstagram((center as any).instagram || '');
-      setFacebook((center as any).facebook || '');
-      setTiktok((center as any).tiktok || '');
+      setLocation(center.location || '');
+      setOperatingHours(center.operating_hours || '');
+      setWebsite(center.website || '');
+      setInstagram(center.instagram || '');
+      setFacebook(center.facebook || '');
+      setTiktok(center.tiktok || '');
     }
   }, [center]);
 
@@ -68,23 +60,18 @@ const AdminSettings = () => {
   };
 
   const updateMutation = useMutation({
-    mutationFn: async () => {
-      const { error } = await supabase
-        .from('dive_centers')
-        .update({
-          name,
-          description,
-          whatsapp_number: whatsapp ? stripPhoneFormat(whatsapp) : null,
-          location: location || null,
-          operating_hours: operatingHours || null,
-          website: website || null,
-          instagram: instagram || null,
-          facebook: facebook || null,
-          tiktok: tiktok || null,
-        } as any)
-        .eq('id', diveCenterId!);
-      if (error) throw error;
-    },
+    mutationFn: () =>
+      updateDiveCenter(diveCenterId!, {
+        name,
+        description: description || null,
+        whatsapp_number: whatsapp ? stripPhoneFormat(whatsapp) : null,
+        location: location || null,
+        operating_hours: operatingHours || null,
+        website: website || null,
+        instagram: instagram || null,
+        facebook: facebook || null,
+        tiktok: tiktok || null,
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dive-center'] });
       toast.success(t('admin.settings.saved'));
@@ -96,7 +83,23 @@ const AdminSettings = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (whatsapp && !validateWhatsapp(whatsapp)) return;
+    const stripped = whatsapp ? stripPhoneFormat(whatsapp) : '';
+    const result = diveCenterSchema.safeParse({
+      name,
+      description,
+      whatsapp_number: stripped,
+      location,
+      operating_hours: operatingHours,
+      website,
+      instagram,
+      facebook,
+      tiktok,
+    });
+    if (!result.success) {
+      const firstError = result.error.issues[0]?.message || 'Validation error';
+      toast.error(firstError);
+      return;
+    }
     updateMutation.mutate();
   };
 

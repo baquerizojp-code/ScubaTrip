@@ -1,6 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useI18n } from '@/lib/i18n';
-import { supabase } from '@/integrations/supabase/client';
+import { fetchDashboardStats, autoCompletePastTrips } from '@/services/trips';
 import { useQuery } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,45 +14,14 @@ const AdminDashboard = () => {
   // Auto-complete past trips on dashboard load
   useQuery({
     queryKey: ['auto-complete-trips'],
-    queryFn: async () => {
-      await supabase.rpc('auto_complete_past_trips');
-      return true;
-    },
+    queryFn: () => autoCompletePastTrips(),
     enabled: !!diveCenterId,
     staleTime: 1000 * 60 * 5, // run at most every 5 min
   });
 
   const { data: stats } = useQuery({
     queryKey: ['admin-stats', diveCenterId],
-    queryFn: async () => {
-      if (!diveCenterId) return { trips: 0, pendingBookings: 0, confirmedThisMonth: 0 };
-
-      const today = new Date().toISOString().split('T')[0];
-      const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
-
-      const [tripsRes, tripsAll] = await Promise.all([
-        supabase.from('trips').select('id', { count: 'exact', head: true })
-          .eq('dive_center_id', diveCenterId).gte('trip_date', today).eq('status', 'published'),
-        supabase.from('trips').select('id').eq('dive_center_id', diveCenterId),
-      ]);
-
-      const tripIds = tripsAll.data?.map(t => t.id) || [];
-      let pendingBookings = 0;
-      let confirmedThisMonth = 0;
-
-      if (tripIds.length) {
-        const [pendingRes, confirmedRes] = await Promise.all([
-          supabase.from('bookings').select('id', { count: 'exact', head: true })
-            .in('trip_id', tripIds).eq('status', 'pending'),
-          supabase.from('bookings').select('id', { count: 'exact', head: true })
-            .in('trip_id', tripIds).eq('status', 'confirmed').gte('updated_at', monthStart),
-        ]);
-        pendingBookings = pendingRes.count || 0;
-        confirmedThisMonth = confirmedRes.count || 0;
-      }
-
-      return { trips: tripsRes.count || 0, pendingBookings, confirmedThisMonth };
-    },
+    queryFn: () => fetchDashboardStats(diveCenterId!),
     enabled: !!diveCenterId,
   });
 

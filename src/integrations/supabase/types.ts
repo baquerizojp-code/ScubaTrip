@@ -326,6 +326,7 @@ export type Database = {
           trip_time: string
           updated_at: string
           whatsapp_group_url: string | null
+          image_url: string | null
         }
         Insert: {
           available_spots: number
@@ -348,6 +349,7 @@ export type Database = {
           trip_time: string
           updated_at?: string
           whatsapp_group_url?: string | null
+          image_url?: string | null
         }
         Update: {
           available_spots?: number
@@ -370,6 +372,7 @@ export type Database = {
           trip_time?: string
           updated_at?: string
           whatsapp_group_url?: string | null
+          image_url?: string | null
         }
         Relationships: [
           {

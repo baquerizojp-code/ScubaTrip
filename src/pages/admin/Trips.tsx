@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSearchParams } from 'react-router-dom';
 import { useI18n } from '@/lib/i18n';
-import { supabase } from '@/integrations/supabase/client';
+import { fetchTripsByCenter, createTrip, updateTrip, deleteTrip } from '@/services/trips';
+import { tripSchema } from '@/lib/schemas';
+import ImageUpload from '@/components/ImageUpload';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -45,6 +47,7 @@ interface TripFormData {
   min_certification: CertLevel | '';
   gear_rental_available: boolean;
   whatsapp_group_url: string;
+  image_url: string;
   status: TripStatus;
 }
 
@@ -52,7 +55,7 @@ const emptyForm: TripFormData = {
   title: '', description: '', dive_site: '', departure_point: '',
   trip_date: '', trip_time: '08:00', total_spots: 10, price_usd: 0,
   difficulty: '', min_certification: '', gear_rental_available: false,
-  whatsapp_group_url: '', status: 'draft',
+  whatsapp_group_url: '', image_url: '', status: 'draft',
 };
 
 const AdminTrips = () => {
@@ -64,6 +67,7 @@ const AdminTrips = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<TripFormData>(emptyForm);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (searchParams.get('new') === '1') {
@@ -78,16 +82,7 @@ const AdminTrips = () => {
 
   const { data: trips, isLoading } = useQuery({
     queryKey: ['admin-trips', diveCenterId],
-    queryFn: async () => {
-      if (!diveCenterId) return [];
-      const { data, error } = await supabase
-        .from('trips')
-        .select('*')
-        .eq('dive_center_id', diveCenterId)
-        .order('trip_date', { ascending: false });
-      if (error) throw error;
-      return data;
-    },
+    queryFn: () => fetchTripsByCenter(diveCenterId!),
     enabled: !!diveCenterId,
   });
 
@@ -106,20 +101,28 @@ const AdminTrips = () => {
   const saveMutation = useMutation({
     mutationFn: async (data: TripFormData) => {
       const payload = {
-        ...data,
         dive_center_id: diveCenterId!,
-        available_spots: editingId ? undefined : data.total_spots,
+        title: data.title,
+        description: data.description || null,
+        dive_site: data.dive_site,
+        departure_point: data.departure_point,
+        trip_date: data.trip_date,
+        trip_time: data.trip_time,
+        total_spots: data.total_spots,
+        price_usd: data.price_usd,
         difficulty: data.difficulty || null,
         min_certification: data.min_certification || null,
+        gear_rental_available: data.gear_rental_available,
+        whatsapp_group_url: data.whatsapp_group_url || null,
+        image_url: data.image_url || null,
+        status: data.status,
       };
 
       if (editingId) {
-        const { available_spots, ...updatePayload } = payload as any;
-        const { error } = await supabase.from('trips').update(updatePayload).eq('id', editingId);
-        if (error) throw error;
+        const { dive_center_id, ...updatePayload } = payload;
+        await updateTrip(editingId, updatePayload);
       } else {
-        const { error } = await supabase.from('trips').insert(payload as any);
-        if (error) throw error;
+        await createTrip({ ...payload, available_spots: data.total_spots });
       }
     },
     onSuccess: () => {
@@ -135,10 +138,7 @@ const AdminTrips = () => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await supabase.from('trips').delete().eq('id', id);
-      if (error) throw error;
-    },
+    mutationFn: (id: string) => deleteTrip(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-trips'] });
       toast.success(t('admin.trips.deleted'));
@@ -153,7 +153,9 @@ const AdminTrips = () => {
       total_spots: trip.total_spots, price_usd: Number(trip.price_usd),
       difficulty: trip.difficulty || '', min_certification: trip.min_certification || '',
       gear_rental_available: trip.gear_rental_available || false,
-      whatsapp_group_url: trip.whatsapp_group_url || '', status: trip.status,
+      whatsapp_group_url: trip.whatsapp_group_url || '', 
+      image_url: trip.image_url || '',
+      status: trip.status,
     });
     setDialogOpen(true);
   };
@@ -244,8 +246,31 @@ const AdminTrips = () => {
           <DialogHeader>
             <DialogTitle>{editingId ? t('admin.trips.edit') : t('admin.trips.create')}</DialogTitle>
           </DialogHeader>
-          <form onSubmit={(e) => { e.preventDefault(); saveMutation.mutate(form); }} className="space-y-4">
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            const result = tripSchema.safeParse(form);
+            if (!result.success) {
+              const errors: Record<string, string> = {};
+              result.error.issues.forEach((issue) => {
+                const key = issue.path[0] as string;
+                errors[key] = issue.message;
+              });
+              setFormErrors(errors);
+              toast.error(t('common.fixErrors') || 'Please fix the errors below');
+              return;
+            }
+            setFormErrors({});
+            saveMutation.mutate(form);
+          }} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="md:col-span-2">
+                <Label>{t('admin.trips.field.image') || 'Imagen del Viaje'}</Label>
+                <ImageUpload 
+                  value={form.image_url} 
+                  onChange={(url) => setForm({ ...form, image_url: url })} 
+                  bucket="trip-images"
+                />
+              </div>
               <div className="md:col-span-2">
                 <Label>{t('admin.trips.field.title')}</Label>
                 <Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />

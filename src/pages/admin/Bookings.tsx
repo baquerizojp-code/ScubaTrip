@@ -1,6 +1,14 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useI18n } from '@/lib/i18n';
 import { supabase } from '@/integrations/supabase/client';
+import {
+  fetchBookingsForCenter,
+  confirmBooking,
+  rejectBooking,
+  approveCancellation,
+  denyCancellation,
+  type AdminBookingWithDetails,
+} from '@/services/bookings';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -28,25 +36,7 @@ const AdminBookings = () => {
 
   const { data: bookings, isLoading } = useQuery({
     queryKey: ['admin-bookings', diveCenterId],
-    queryFn: async () => {
-      if (!diveCenterId) return [];
-      const { data: trips } = await supabase
-        .from('trips')
-        .select('id')
-        .eq('dive_center_id', diveCenterId);
-      
-      if (!trips?.length) return [];
-      
-      const tripIds = trips.map(t => t.id);
-      const { data, error } = await supabase
-        .from('bookings')
-        .select('*, trips(title, trip_date, trip_time, dive_site), diver_profiles(full_name, certification, logged_dives)')
-        .in('trip_id', tripIds)
-        .order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      return data;
-    },
+    queryFn: () => fetchBookingsForCenter(diveCenterId!),
     enabled: !!diveCenterId,
   });
 
@@ -69,29 +59,19 @@ const AdminBookings = () => {
   }, [queryClient]);
 
   const confirmMutation = useMutation({
-    mutationFn: async (bookingId: string) => {
-      const { data, error } = await supabase.rpc('confirm_booking', { _booking_id: bookingId });
-      if (error) throw error;
-      if (!data) throw new Error(t('admin.bookings.noSpots'));
-      return data;
-    },
+    mutationFn: (bookingId: string) => confirmBooking(bookingId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-bookings'] });
       toast.success(t('admin.bookings.confirmed'));
     },
-    onError: (err: any) => {
+    onError: (err: Error) => {
       toast.error(err.message || 'Error');
     },
   });
 
   const rejectMutation = useMutation({
-    mutationFn: async ({ id, reason }: { id: string; reason: string }) => {
-      const { error } = await supabase
-        .from('bookings')
-        .update({ status: 'rejected', rejection_reason: reason })
-        .eq('id', id);
-      if (error) throw error;
-    },
+    mutationFn: ({ id, reason }: { id: string; reason: string }) =>
+      rejectBooking(id, reason),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-bookings'] });
       setRejectDialog(null);
@@ -101,28 +81,18 @@ const AdminBookings = () => {
   });
 
   const approveCancellationMutation = useMutation({
-    mutationFn: async (bookingId: string) => {
-      const { data, error } = await supabase.rpc('approve_cancellation', { _booking_id: bookingId });
-      if (error) throw error;
-      if (!data) throw new Error('Could not approve cancellation');
-    },
+    mutationFn: (bookingId: string) => approveCancellation(bookingId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-bookings'] });
       toast.success(t('admin.bookings.cancellationApproved'));
     },
-    onError: (err: any) => {
+    onError: (err: Error) => {
       toast.error(err.message || 'Error');
     },
   });
 
   const denyCancellationMutation = useMutation({
-    mutationFn: async (bookingId: string) => {
-      const { error } = await supabase
-        .from('bookings')
-        .update({ status: 'confirmed' })
-        .eq('id', bookingId);
-      if (error) throw error;
-    },
+    mutationFn: (bookingId: string) => denyCancellation(bookingId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-bookings'] });
       toast.success(t('admin.bookings.cancellationDenied'));

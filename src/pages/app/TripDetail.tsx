@@ -1,6 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { fetchTripById, type TripWithCenter } from '@/services/trips';
+import {
+  createBooking,
+  fetchBookingForTrip,
+  cancelBooking,
+  requestCancellation,
+} from '@/services/bookings';
+import {
+  fetchDiverProfile,
+  createDiverProfile,
+  assignDiverRole,
+} from '@/services/profiles';
 import { useAuth } from '@/contexts/AuthContext';
 import { useI18n } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
@@ -47,7 +58,7 @@ import { format } from 'date-fns';
 import { downloadICSFile, getGoogleCalendarUrl } from '@/lib/calendar';
 import type { Tables } from '@/integrations/supabase/types';
 
-type Trip = Tables<'trips'> & { dive_centers: { name: string } | null };
+type Trip = TripWithCenter;
 
 const certOptions = [
   { value: 'none', labelKey: 'profile.cert.none' },
@@ -90,19 +101,12 @@ const TripDetail = () => {
   useEffect(() => {
     if (!id) return;
     const fetchData = async () => {
-      const [{ data: tripData }, { data: profile }] = await Promise.all([
-        supabase.from('trips').select('id, title, dive_site, departure_point, trip_date, trip_time, available_spots, total_spots, price_usd, difficulty, min_certification, gear_rental_available, description, status, dive_center_id, created_at, updated_at, whatsapp_group_url, dive_centers(name)').eq('id', id).single(),
-        supabase.from('diver_profiles').select('id').eq('user_id', user!.id).maybeSingle(),
-      ]);
-      setTrip(tripData as Trip);
+      const tripData = await fetchTripById(id);
+      setTrip(tripData);
 
+      const profile = await fetchDiverProfile(user!.id);
       if (profile) {
-        const { data: bk } = await supabase
-          .from('bookings')
-          .select('*')
-          .eq('trip_id', id)
-          .eq('diver_id', profile.id)
-          .maybeSingle();
+        const bk = await fetchBookingForTrip(id, profile.id);
         setExistingBooking(bk);
       }
       setLoading(false);
@@ -111,34 +115,20 @@ const TripDetail = () => {
   }, [id, user]);
 
   const insertBooking = async (tripId: string, diverId: string) => {
-    const { error } = await supabase.from('bookings').insert({
-      trip_id: tripId,
-      diver_id: diverId,
-      notes: notes || null,
-    });
-
-    if (error) {
-      toast.error(t('diver.trip.bookError'));
-    } else {
+    try {
+      await createBooking(tripId, diverId, notes || undefined);
       toast.success(t('diver.trip.booked'));
-      const { data: bk } = await supabase
-        .from('bookings')
-        .select('*')
-        .eq('trip_id', tripId)
-        .eq('diver_id', diverId)
-        .maybeSingle();
+      const bk = await fetchBookingForTrip(tripId, diverId);
       setExistingBooking(bk);
+    } catch {
+      toast.error(t('diver.trip.bookError'));
     }
   };
 
   const handleBook = async () => {
     if (!trip || !user) return;
     setBooking(true);
-    const { data: profile } = await supabase
-      .from('diver_profiles')
-      .select('id')
-      .eq('user_id', user.id)
-      .single();
+    const profile = await fetchDiverProfile(user.id);
 
     if (!profile) {
       setShowProfileDialog(true);
@@ -154,74 +144,57 @@ const TripDetail = () => {
     if (!trip || !user || !dialogFullName.trim()) return;
     setCreatingProfile(true);
 
-    // 1. Assign diver role
-    const { error: roleError } = await supabase.from('user_roles').insert({
-      user_id: user.id,
-      role: 'diver',
-    });
-    if (roleError && !roleError.message.includes('duplicate')) {
-      toast.error(t('diver.trip.bookError'));
-      setCreatingProfile(false);
-      return;
-    }
+    try {
+      // 1. Assign diver role
+      await assignDiverRole(user.id);
 
-    // 2. Create diver profile
-    const { data: newProfile, error: profileError } = await supabase
-      .from('diver_profiles')
-      .insert({
+      // 2. Create diver profile
+      const newProfile = await createDiverProfile({
         user_id: user.id,
         full_name: dialogFullName.trim(),
         certification: dialogCertification as any,
-      })
-      .select('id')
-      .single();
+      });
 
-    if (profileError || !newProfile) {
+      // 3. Refresh auth context role
+      await refreshRole();
+
+      // 4. Auto-book
+      await insertBooking(trip.id, newProfile.id);
+      setShowProfileDialog(false);
+    } catch {
       toast.error(t('diver.trip.bookError'));
+    } finally {
       setCreatingProfile(false);
-      return;
     }
-
-    // 3. Refresh auth context role
-    await refreshRole();
-
-    // 4. Auto-book
-    await insertBooking(trip.id, newProfile.id);
-    setShowProfileDialog(false);
-    setCreatingProfile(false);
   };
 
   const handleCancelPending = async () => {
     if (!existingBooking) return;
     setCancelling(true);
-    const { error } = await supabase
-      .from('bookings')
-      .update({ status: 'cancelled' as any })
-      .eq('id', existingBooking.id);
-    setCancelling(false);
-    setShowCancelDialog(false);
-    if (error) {
-      toast.error(t('diver.trip.bookError'));
-    } else {
+    try {
+      await cancelBooking(existingBooking.id);
       toast.success(t('diver.bookings.cancelled'));
       setExistingBooking({ ...existingBooking, status: 'cancelled' });
+    } catch {
+      toast.error(t('diver.trip.bookError'));
+    } finally {
+      setCancelling(false);
+      setShowCancelDialog(false);
     }
   };
 
   const handleRequestCancellation = async () => {
     if (!existingBooking) return;
     setCancelling(true);
-    const { error } = await supabase
-      .from('bookings')
-      .update({ status: 'cancellation_requested' as any })
-      .eq('id', existingBooking.id);
-    setCancelling(false);
-    setShowCancelDialog(false);
-    if (error) {
-      toast.error(t('diver.trip.bookError'));
-    } else {
+    try {
+      await requestCancellation(existingBooking.id);
       toast.success(t('diver.trip.cancellationRequested'));
-      setExistingBooking({ ...existingBooking, status: 'cancellation_requested' as any });
+      setExistingBooking({ ...existingBooking, status: 'cancellation_requested' });
+    } catch {
+      toast.error(t('diver.trip.bookError'));
+    } finally {
+      setCancelling(false);
+      setShowCancelDialog(false);
     }
   };
 

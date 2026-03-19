@@ -4,6 +4,21 @@ import en from './locales/en.json';
 
 type Locale = 'es' | 'en';
 
+const LOCALE_STORAGE_KEY = 'scubatrip-locale';
+
+function getInitialLocale(): Locale {
+  // 1. Check localStorage for a saved preference
+  const saved = localStorage.getItem(LOCALE_STORAGE_KEY);
+  if (saved === 'en' || saved === 'es') return saved;
+
+  // 2. Auto-detect from browser language
+  const browserLang = navigator.language?.slice(0, 2).toLowerCase();
+  if (browserLang === 'en') return 'en';
+
+  // 3. Default to Spanish
+  return 'es';
+}
+
 interface I18nStore {
   locale: Locale;
   setLocale: (locale: Locale) => void;
@@ -13,8 +28,11 @@ interface I18nStore {
 const translations: Record<Locale, Record<string, string>> = { es, en };
 
 export const useI18n = create<I18nStore>((set, get) => ({
-  locale: 'es',
-  setLocale: (locale) => set({ locale }),
+  locale: getInitialLocale(),
+  setLocale: (locale) => {
+    localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+    set({ locale });
+  },
   t: (key: string) => {
     const { locale } = get();
     return translations[locale][key] || key;

@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import {
+  fetchBookingsForDiver,
+  cancelBooking,
+  type BookingWithDetails,
+} from '@/services/bookings';
 import { useAuth } from '@/contexts/AuthContext';
 import { useI18n } from '@/lib/i18n';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -23,22 +28,7 @@ import { Calendar, MapPin, ChevronRight, X, MessageCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 
-interface BookingWithTrip {
-  id: string;
-  status: string;
-  notes: string | null;
-  rejection_reason: string | null;
-  created_at: string;
-  trips: {
-    id: string;
-    title: string;
-    dive_site: string;
-    trip_date: string;
-    trip_time: string;
-    whatsapp_group_url: string | null;
-    dive_centers: { name: string } | null;
-  } | null;
-}
+
 
 const statusBadge: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-800',
@@ -57,24 +47,7 @@ const MyBookings = () => {
 
   const { data: bookings = [], isLoading } = useQuery({
     queryKey: ['my-bookings', user?.id],
-    queryFn: async () => {
-      if (!user) return [];
-      const { data: profile } = await supabase
-        .from('diver_profiles')
-        .select('id')
-        .eq('user_id', user.id)
-        .maybeSingle();
-      if (!profile) return [];
-
-      const { data, error } = await supabase
-        .from('bookings')
-        .select('id, status, notes, rejection_reason, created_at, trips(id, title, dive_site, trip_date, trip_time, whatsapp_group_url, dive_centers(name))')
-        .eq('diver_id', profile.id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      return (data as BookingWithTrip[]) || [];
-    },
+    queryFn: () => fetchBookingsForDiver(user!.id),
     enabled: !!user,
     refetchInterval: 30000,
   });
@@ -100,17 +73,15 @@ const MyBookings = () => {
   const handleCancel = async () => {
     if (!cancelId) return;
     setCancelling(true);
-    const { error } = await supabase
-      .from('bookings')
-      .update({ status: 'cancelled' as any })
-      .eq('id', cancelId);
-    setCancelling(false);
-    setCancelId(null);
-    if (error) {
-      toast.error(t('diver.trip.bookError'));
-    } else {
+    try {
+      await cancelBooking(cancelId);
       toast.success(t('diver.bookings.cancelled'));
       queryClient.invalidateQueries({ queryKey: ['my-bookings'] });
+    } catch {
+      toast.error(t('diver.trip.bookError'));
+    } finally {
+      setCancelling(false);
+      setCancelId(null);
     }
   };
 

@@ -34,21 +34,28 @@ const TripCard = ({ trip, linkTo, bookingStatus }: TripCardProps) => {
 
   return (
     <Link to={linkTo}>
-      <Card className="shadow-card hover:shadow-card-hover transition-shadow cursor-pointer overflow-hidden">
-        <div className="bg-gradient-ocean p-4 text-primary-foreground">
-          <div className="flex items-start justify-between">
-            <div>
-              <h3 className="font-bold text-lg leading-tight">{trip.title}</h3>
-              <p className="text-sm opacity-90 mt-0.5">{trip.dive_centers?.name}</p>
-            </div>
-            <div className="flex flex-col items-end gap-1">
-              {bookingStatus && (
-                <Badge className={bookingStatusColors[bookingStatus] + ' text-xs border'}>
-                  {bookingStatusLabels[bookingStatus]?.[locale] || bookingStatus}
-                </Badge>
-              )}
-            </div>
+      <Card className="shadow-card hover:shadow-card-hover transition-shadow cursor-pointer overflow-hidden group">
+        <div className="relative h-40 w-full overflow-hidden">
+          {trip.image_url ? (
+            <img 
+              src={trip.image_url} 
+              alt={trip.title} 
+              className="w-full h-full object-cover transition-transform group-hover:scale-105" 
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-ocean" />
+          )}
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-4 text-white">
+            <h3 className="font-bold text-lg leading-tight truncate">{trip.title}</h3>
+            <p className="text-xs opacity-90 mt-0.5">{trip.dive_centers?.name}</p>
           </div>
+          {bookingStatus && (
+            <div className="absolute top-2 right-2">
+              <Badge className={bookingStatusColors[bookingStatus] + ' text-[10px] border shadow-sm'}>
+                {bookingStatusLabels[bookingStatus]?.[locale] || bookingStatus}
+              </Badge>
+            </div>
+          )}
         </div>
         <CardContent className="p-4 space-y-2.5">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">

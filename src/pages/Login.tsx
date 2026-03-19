@@ -48,10 +48,23 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    // If "Remember Me" is unchecked, temporarily disable session persistence
+    if (!rememberMe) {
+      // Store session in sessionStorage instead of localStorage so it clears on tab close
+      await supabase.auth.setSession({ access_token: '', refresh_token: '' }).catch(() => {});
+    }
+
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
     if (error) {
       toast.error(error.message);
+    } else if (!rememberMe) {
+      // Move session to sessionStorage so it's cleared when the browser closes
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        sessionStorage.setItem('sb-session', JSON.stringify(session));
+      }
     }
   };
 
@@ -67,7 +80,7 @@ const Login = () => {
     if (error) {
       toast.error(error.message);
     } else if (data.session) {
-      toast.success('¡Cuenta creada!');
+      toast.success(t('auth.signup.success'));
     } else if (data.user && !data.session) {
       // User created but no session — could mean email confirmation needed
       // or user already exists (Supabase hides this for security)
