@@ -19,8 +19,9 @@ interface Notification {
 }
 
 const NotificationBell = () => {
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   const { t, locale } = useI18n();
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
