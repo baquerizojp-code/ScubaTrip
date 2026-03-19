@@ -42,7 +42,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { MapPin, Calendar, Clock, Users, DollarSign, ArrowLeft, Shield, Wrench, CalendarPlus, XCircle } from 'lucide-react';
+import { MapPin, Calendar, Clock, Users, DollarSign, ArrowLeft, Shield, Wrench, CalendarPlus, XCircle, MessageCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { downloadICSFile, getGoogleCalendarUrl } from '@/lib/calendar';
 import type { Tables } from '@/integrations/supabase/types';
@@ -91,7 +91,7 @@ const TripDetail = () => {
     if (!id) return;
     const fetchData = async () => {
       const [{ data: tripData }, { data: profile }] = await Promise.all([
-        supabase.from('trips').select('id, title, dive_site, departure_point, trip_date, trip_time, available_spots, total_spots, price_usd, difficulty, min_certification, gear_rental_available, description, status, dive_center_id, created_at, updated_at, dive_centers(name)').eq('id', id).single(),
+        supabase.from('trips').select('id, title, dive_site, departure_point, trip_date, trip_time, available_spots, total_spots, price_usd, difficulty, min_certification, gear_rental_available, description, status, dive_center_id, created_at, updated_at, whatsapp_group_url, dive_centers(name)').eq('id', id).single(),
         supabase.from('diver_profiles').select('id').eq('user_id', user!.id).maybeSingle(),
       ]);
       setTrip(tripData as Trip);
@@ -362,6 +362,27 @@ const TripDetail = () => {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+                {trip.whatsapp_group_url ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-2 text-green-600 border-green-300 hover:bg-green-50 hover:text-green-700"
+                    onClick={() => window.open(trip.whatsapp_group_url!, '_blank')}
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    {t('diver.trip.joinWhatsApp')}
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-2"
+                    disabled
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    {t('diver.trip.whatsAppPending')}
+                  </Button>
+                )}
                 <Button
                   variant="outline"
                   size="sm"

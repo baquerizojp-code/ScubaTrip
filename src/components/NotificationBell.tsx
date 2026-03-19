@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
@@ -19,8 +19,9 @@ interface Notification {
 }
 
 const NotificationBell = () => {
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   const { t, locale } = useI18n();
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -124,6 +125,19 @@ const NotificationBell = () => {
                   onClick={() => {
                     if (!n.is_read) markAsRead(n.id);
                     setOpen(false);
+                    // Navigate based on notification type and role
+                    const isAdmin = role === 'dive_center_admin' || role === 'dive_center_staff';
+                    if (isAdmin) {
+                      if (n.type === 'new_booking' || n.type === 'cancellation_request') {
+                        navigate('/admin/bookings');
+                      } else if (n.type === 'booking_cancelled') {
+                        navigate('/admin/bookings');
+                      }
+                    } else {
+                      if ((n.type === 'booking_confirmed' || n.type === 'booking_rejected' || n.type === 'new_trip') && n.trip_id) {
+                        navigate(`/app/trip/${n.trip_id}`);
+                      }
+                    }
                   }}
                 >
                   <div className="flex items-start gap-2">
