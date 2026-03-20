@@ -58,9 +58,10 @@ const CompleteProfile = () => {
     if (!user) return;
     setLoading(true);
 
+    // Upsert role — trigger may have already created it
     const { error: roleError } = await supabase
       .from('user_roles')
-      .insert({ user_id: user.id, role: 'diver' as const });
+      .upsert({ user_id: user.id, role: 'diver' as const }, { onConflict: 'user_id' });
 
     if (roleError) {
       toast.error(roleError.message);
@@ -68,13 +69,14 @@ const CompleteProfile = () => {
       return;
     }
 
+    // Upsert profile — trigger creates a skeleton, we fill in the details
     const { error: profileError } = await supabase
       .from('diver_profiles')
-      .insert({
+      .upsert({
         user_id: user.id,
         full_name: fullName,
         certification: certification as any,
-      });
+      }, { onConflict: 'user_id' });
 
     if (profileError) {
       toast.error(profileError.message);
