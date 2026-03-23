@@ -142,5 +142,7 @@ export async function fetchDashboardStats(diveCenterId: string) {
  * Auto-complete past trips via RPC.
  */
 export async function autoCompletePastTrips() {
-  await supabase.rpc('auto_complete_past_trips');
+  const { error } = await supabase.rpc('auto_complete_past_trips');
+  if (error) throw error;
+  return null;
 }

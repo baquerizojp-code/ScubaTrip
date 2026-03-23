@@ -26,7 +26,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
-import { Plus, Edit, Trash2, Eye, Ship } from 'lucide-react';
+import { Plus, Edit, Trash2, Eye, Ship, FileText, Send } from 'lucide-react';
 import { format } from 'date-fns';
 import type { Database } from '@/integrations/supabase/types';
 
@@ -48,14 +48,13 @@ interface TripFormData {
   gear_rental_available: boolean;
   whatsapp_group_url: string;
   image_url: string;
-  status: TripStatus;
 }
 
 const emptyForm: TripFormData = {
   title: '', description: '', dive_site: '', departure_point: '',
   trip_date: '', trip_time: '08:00', total_spots: 10, price_usd: 0,
   difficulty: '', min_certification: '', gear_rental_available: false,
-  whatsapp_group_url: '', image_url: '', status: 'draft',
+  whatsapp_group_url: '', image_url: '',
 };
 
 const AdminTrips = () => {
@@ -65,6 +64,7 @@ const AdminTrips = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingStatus, setEditingStatus] = useState<TripStatus>('draft');
   const [form, setForm] = useState<TripFormData>(emptyForm);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
@@ -99,43 +99,61 @@ const AdminTrips = () => {
   })();
 
   const saveMutation = useMutation({
-    mutationFn: async (data: TripFormData) => {
+    mutationFn: async ({ formData, targetStatus }: { formData: TripFormData; targetStatus: TripStatus }) => {
       const payload = {
         dive_center_id: diveCenterId!,
-        title: data.title,
-        description: data.description || null,
-        dive_site: data.dive_site,
-        departure_point: data.departure_point,
-        trip_date: data.trip_date,
-        trip_time: data.trip_time,
-        total_spots: data.total_spots,
-        price_usd: data.price_usd,
-        difficulty: data.difficulty || null,
-        min_certification: data.min_certification || null,
-        gear_rental_available: data.gear_rental_available,
-        whatsapp_group_url: data.whatsapp_group_url || null,
-        image_url: data.image_url || null,
-        status: data.status,
+        title: formData.title,
+        description: formData.description || null,
+        dive_site: formData.dive_site,
+        departure_point: formData.departure_point,
+        trip_date: formData.trip_date,
+        trip_time: formData.trip_time,
+        total_spots: formData.total_spots,
+        price_usd: formData.price_usd,
+        difficulty: formData.difficulty || null,
+        min_certification: formData.min_certification || null,
+        gear_rental_available: formData.gear_rental_available,
+        whatsapp_group_url: formData.whatsapp_group_url || null,
+        image_url: formData.image_url || null,
+        status: targetStatus,
       };
 
       if (editingId) {
         const { dive_center_id, ...updatePayload } = payload;
         await updateTrip(editingId, updatePayload);
       } else {
-        await createTrip({ ...payload, available_spots: data.total_spots });
+        await createTrip({ ...payload, available_spots: formData.total_spots });
       }
+      return targetStatus;
     },
-    onSuccess: () => {
+    onSuccess: (targetStatus) => {
       queryClient.invalidateQueries({ queryKey: ['admin-trips'] });
       setDialogOpen(false);
       setEditingId(null);
+      setEditingStatus('draft');
       setForm(emptyForm);
-      toast.success(editingId ? t('admin.trips.updated') : t('admin.trips.created'));
+      toast.success(targetStatus === 'published' ? t('admin.trips.published') : t('admin.trips.savedDraft'));
     },
     onError: (err: any) => {
       toast.error(err.message || 'Error');
     },
   });
+
+  const handleSave = (targetStatus: TripStatus) => {
+    const result = tripSchema.safeParse(form);
+    if (!result.success) {
+      const errors: Record<string, string> = {};
+      result.error.issues.forEach((issue) => {
+        const key = issue.path[0] as string;
+        errors[key] = issue.message;
+      });
+      setFormErrors(errors);
+      toast.error(t('common.fixErrors'));
+      return;
+    }
+    setFormErrors({});
+    saveMutation.mutate({ formData: form, targetStatus });
+  };
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deleteTrip(id),
@@ -147,6 +165,7 @@ const AdminTrips = () => {
 
   const openEdit = (trip: any) => {
     setEditingId(trip.id);
+    setEditingStatus(trip.status);
     setForm({
       title: trip.title, description: trip.description || '', dive_site: trip.dive_site,
       departure_point: trip.departure_point, trip_date: trip.trip_date, trip_time: trip.trip_time,
@@ -155,16 +174,18 @@ const AdminTrips = () => {
       gear_rental_available: trip.gear_rental_available || false,
       whatsapp_group_url: trip.whatsapp_group_url || '', 
       image_url: trip.image_url || '',
-      status: trip.status,
     });
     setDialogOpen(true);
   };
 
   const openCreate = () => {
     setEditingId(null);
+    setEditingStatus('draft');
     setForm(emptyForm);
     setDialogOpen(true);
   };
+
+  const isEditingPublished = editingId && editingStatus === 'published';
 
   const statusColor = (s: TripStatus) => {
     const map: Record<TripStatus, string> = {
@@ -246,22 +267,7 @@ const AdminTrips = () => {
           <DialogHeader>
             <DialogTitle>{editingId ? t('admin.trips.edit') : t('admin.trips.create')}</DialogTitle>
           </DialogHeader>
-          <form onSubmit={(e) => {
-            e.preventDefault();
-            const result = tripSchema.safeParse(form);
-            if (!result.success) {
-              const errors: Record<string, string> = {};
-              result.error.issues.forEach((issue) => {
-                const key = issue.path[0] as string;
-                errors[key] = issue.message;
-              });
-              setFormErrors(errors);
-              toast.error(t('common.fixErrors') || 'Please fix the errors below');
-              return;
-            }
-            setFormErrors({});
-            saveMutation.mutate(form);
-          }} className="space-y-4">
+          <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="md:col-span-2">
                 <Label>{t('admin.trips.field.image') || 'Imagen del Viaje'}</Label>
@@ -297,20 +303,20 @@ const AdminTrips = () => {
               </div>
               <div>
                 <Label>{t('common.price')} (USD)</Label>
-                <Input type="number" min={0} step={0.01} value={form.price_usd || ''} onChange={(e) => setForm({ ...form, price_usd: Number(e.target.value) })} required />
+                <Input type="number" min={0} step={0.01} value={form.price_usd || ''} onChange={(e) => setForm({ ...form, price_usd: Number(e.target.value) })} onFocus={(e) => e.target.select()} required />
               </div>
               <div>
                 <Label>{t('admin.trips.field.spots')}</Label>
-                <Input type="number" min={1} value={form.total_spots || ''} onChange={(e) => setForm({ ...form, total_spots: Number(e.target.value) })} required />
+                <Input type="number" min={1} value={form.total_spots || ''} onChange={(e) => setForm({ ...form, total_spots: Number(e.target.value) })} onFocus={(e) => e.target.select()} required />
               </div>
               <div>
                 <Label>{t('admin.trips.field.difficulty')}</Label>
                 <Select value={form.difficulty} onValueChange={(v) => setForm({ ...form, difficulty: v as TripDifficulty })}>
                   <SelectTrigger><SelectValue placeholder="-" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="beginner">Beginner</SelectItem>
-                    <SelectItem value="intermediate">Intermediate</SelectItem>
-                    <SelectItem value="advanced">Advanced</SelectItem>
+                    <SelectItem value="beginner">{t('admin.trips.difficulty.beginner')}</SelectItem>
+                    <SelectItem value="intermediate">{t('admin.trips.difficulty.intermediate')}</SelectItem>
+                    <SelectItem value="advanced">{t('admin.trips.difficulty.advanced')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -319,24 +325,12 @@ const AdminTrips = () => {
                 <Select value={form.min_certification} onValueChange={(v) => setForm({ ...form, min_certification: v as CertLevel })}>
                   <SelectTrigger><SelectValue placeholder="-" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">None</SelectItem>
-                    <SelectItem value="open_water">Open Water</SelectItem>
-                    <SelectItem value="advanced_open_water">Advanced OW</SelectItem>
-                    <SelectItem value="rescue_diver">Rescue Diver</SelectItem>
-                    <SelectItem value="divemaster">Divemaster</SelectItem>
-                    <SelectItem value="instructor">Instructor</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label>{t('admin.trips.field.status')}</Label>
-                <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v as TripStatus })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="published">Published</SelectItem>
-                    <SelectItem value="completed">Completed</SelectItem>
-                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                    <SelectItem value="none">{t('profile.cert.none')}</SelectItem>
+                    <SelectItem value="open_water">{t('profile.cert.openWater')}</SelectItem>
+                    <SelectItem value="advanced_open_water">{t('profile.cert.advanced')}</SelectItem>
+                    <SelectItem value="rescue_diver">{t('profile.cert.rescue')}</SelectItem>
+                    <SelectItem value="divemaster">{t('profile.cert.divemaster')}</SelectItem>
+                    <SelectItem value="instructor">{t('profile.cert.instructor')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -349,11 +343,52 @@ const AdminTrips = () => {
                 <Input value={form.whatsapp_group_url} onChange={(e) => setForm({ ...form, whatsapp_group_url: e.target.value })} placeholder="https://chat.whatsapp.com/..." />
               </div>
             </div>
-            <div className="flex justify-end gap-2 pt-4">
-              <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>{t('common.cancel')}</Button>
-              <Button type="submit" disabled={saveMutation.isPending}>
-                {saveMutation.isPending ? t('common.loading') : t('common.save')}
-              </Button>
+            <div className="flex justify-end gap-2 pt-4 border-t border-border mt-2">
+              <Button type="button" variant="ghost" onClick={() => setDialogOpen(false)}>{t('common.cancel')}</Button>
+              {isEditingPublished ? (
+                <>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={saveMutation.isPending}
+                    onClick={() => handleSave('draft')}
+                    className="gap-2"
+                  >
+                    <FileText className="h-4 w-4" />
+                    {saveMutation.isPending ? t('common.loading') : t('admin.trips.unpublish')}
+                  </Button>
+                  <Button
+                    type="button"
+                    disabled={saveMutation.isPending}
+                    onClick={() => handleSave('published')}
+                    className="gap-2 bg-gradient-ocean text-primary-foreground hover:opacity-90"
+                  >
+                    {saveMutation.isPending ? t('common.loading') : t('admin.trips.saveChanges')}
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={saveMutation.isPending}
+                    onClick={() => handleSave('draft')}
+                    className="gap-2"
+                  >
+                    <FileText className="h-4 w-4" />
+                    {saveMutation.isPending ? t('common.loading') : t('admin.trips.saveDraft')}
+                  </Button>
+                  <Button
+                    type="button"
+                    disabled={saveMutation.isPending}
+                    onClick={() => handleSave('published')}
+                    className="gap-2 bg-gradient-ocean text-primary-foreground hover:opacity-90"
+                  >
+                    <Send className="h-4 w-4" />
+                    {saveMutation.isPending ? t('common.loading') : t('admin.trips.publish')}
+                  </Button>
+                </>
+              )}
             </div>
           </form>
         </DialogContent>
@@ -364,7 +399,7 @@ const AdminTrips = () => {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t('admin.trips.confirmDelete')}</AlertDialogTitle>
-            <AlertDialogDescription>{t('admin.trips.confirmDeleteDesc') || 'This action cannot be undone.'}</AlertDialogDescription>
+            <AlertDialogDescription>{t('admin.trips.confirmDeleteDesc')}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
@@ -372,7 +407,7 @@ const AdminTrips = () => {
               onClick={() => { if (deleteId) { deleteMutation.mutate(deleteId); setDeleteId(null); } }}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {t('common.delete') || 'Delete'}
+              {t('common.delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

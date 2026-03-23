@@ -24,6 +24,7 @@ const AdminStaff = lazy(() => import("./pages/admin/Staff"));
 const AdminSettings = lazy(() => import("./pages/admin/Settings"));
 const DiverLayout = lazy(() => import("@/components/DiverLayout"));
 const DiverDiscover = lazy(() => import("./pages/app/Discover"));
+const DiverDashboard = lazy(() => import("./pages/app/Dashboard"));
 const TripDetail = lazy(() => import("./pages/app/TripDetail"));
 const MyBookings = lazy(() => import("./pages/app/MyBookings"));
 const DiverProfile = lazy(() => import("./pages/app/DiverProfile"));
@@ -84,6 +85,7 @@ const App = () => (
                   <DiverLayout />
                 </ProtectedRoute>
               }>
+                <Route index element={<DiverDashboard />} />
                 <Route path="discover" element={<DiverDiscover />} />
                 <Route path="trip/:id" element={<TripDetail />} />
                 <Route path="bookings" element={<MyBookings />} />

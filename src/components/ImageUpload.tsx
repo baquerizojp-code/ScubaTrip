@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useI18n } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
 import { Upload, X, Loader2, Image as ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
@@ -14,6 +15,7 @@ interface ImageUploadProps {
 
 const ImageUpload = ({ value, onChange, bucket, path = '', className = '' }: ImageUploadProps) => {
   const [uploading, setUploading] = useState(false);
+  const { t } = useI18n();
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -37,9 +39,9 @@ const ImageUpload = ({ value, onChange, bucket, path = '', className = '' }: Ima
         .getPublicUrl(filePath);
 
       onChange(publicUrl);
-      toast.success('Imagen subida correctamente');
+      toast.success(t('image.uploaded'));
     } catch (error: any) {
-      toast.error('Error al subir la imagen: ' + error.message);
+      toast.error(t('image.uploadError') + ': ' + error.message);
     } finally {
       setUploading(false);
     }
@@ -71,7 +73,7 @@ const ImageUpload = ({ value, onChange, bucket, path = '', className = '' }: Ima
           <div className="w-40 h-40 rounded-lg border-2 border-dashed border-muted-foreground/25 flex flex-col items-center justify-center bg-muted/30">
             <ImageIcon className="h-10 w-10 text-muted-foreground/40 mb-2" />
             <span className="text-xs text-muted-foreground font-medium text-center px-4">
-              Sin imagen
+              {t('image.noImage')}
             </span>
           </div>
         )}
@@ -99,12 +101,12 @@ const ImageUpload = ({ value, onChange, bucket, path = '', className = '' }: Ima
                 ) : (
                   <Upload className="mr-2 h-4 w-4" />
                 )}
-                {value ? 'Cambiar imagen' : 'Subir imagen'}
+                {value ? t('image.change') : t('image.upload')}
               </span>
             </Button>
           </Label>
           <p className="text-[10px] text-muted-foreground mt-2 px-1">
-            Recomendado: 800x600px o superior. JPG, PNG o WebP.
+            {t('image.recommendation')}
           </p>
         </div>
       </div>

@@ -29,35 +29,38 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-safe ${
-        isTransparent
-          ? 'bg-transparent border-b border-transparent'
-          : 'bg-ocean-900/90 backdrop-blur-md border-b border-white/10'
+        scrolled
+          ? 'bg-secondary/95 backdrop-blur-xl border-b border-white/10 shadow-lg py-1'
+          : transparent
+          ? 'bg-secondary/30 backdrop-blur-md border-b border-white/5 py-2'
+          : 'bg-secondary/90 backdrop-blur-md border-b border-white/10 py-1'
       }`}
     >
-      <div className="container mx-auto px-4 h-14 sm:h-16 flex items-center justify-between">
-        <Link to="/" className={`flex items-center gap-2.5 min-h-[48px] ${isTransparent ? 'drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]' : ''}`}>
-          <ScubaMaskLogo className="w-10 h-12 sm:w-9 sm:h-11 text-primary-foreground" />
-          <span className="text-xl sm:text-2xl font-bold text-primary-foreground">ScubaTrip</span>
+      <div className="container mx-auto px-6 h-14 sm:h-16 flex items-center justify-between max-w-7xl">
+        <Link to="/" className="flex items-center gap-3 min-h-[48px]">
+          <ScubaMaskLogo className="w-8 h-10 text-primary" />
+          <span className="text-2xl font-black text-white tracking-tighter font-headline">ScubaTrip</span>
         </Link>
 
-        <div className="flex items-center gap-1 sm:gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setLocale(locale === 'es' ? 'en' : 'es')}
-            aria-label={locale === 'es' ? 'Switch to English' : 'Cambiar a Español'}
-            className="gap-1 text-primary-foreground/70 hover:text-primary-foreground hover:bg-white/10 px-2 sm:px-3 min-h-[44px] min-w-[44px]"
-          >
-            <Globe className="w-5 h-5 sm:w-4 sm:h-4" />
-            <span className="hidden sm:inline">{t('nav.language')}</span>
-          </Button>
+        <div className="flex items-center gap-2 sm:gap-4">
+          <div className="hidden sm:block">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setLocale(locale === 'es' ? 'en' : 'es')}
+              aria-label={locale === 'es' ? 'Switch to English' : 'Cambiar a Español'}
+              className="gap-2 text-ocean-200 hover:text-white hover:bg-white/10 px-3 min-h-[44px] rounded-full font-headline font-semibold text-xs uppercase tracking-widest"
+            >
+              <Globe className="w-4 h-4" />
+              <span>{locale === 'es' ? 'EN' : 'ES'}</span>
+            </Button>
+          </div>
           {user && role ? (
             <Link to={dashboardPath}>
               <Button
                 size="sm"
-                className="bg-cyan-electric text-cyan-electric-foreground hover:bg-cyan-electric/85 font-semibold text-xs sm:text-sm px-3 sm:px-4 gap-1 min-h-[44px] min-w-[44px]"
+                className="bg-primary text-primary-foreground hover:brightness-110 font-bold font-headline text-sm px-6 py-2.5 rounded-full shadow-lg shadow-primary/20 transition-all"
               >
-                <User className="w-4 h-4" />
                 {t('nav.dashboard')}
               </Button>
             </Link>
@@ -65,9 +68,8 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
             <Link to="/login">
               <Button
                 size="sm"
-                className="bg-cyan-electric text-cyan-electric-foreground hover:bg-cyan-electric/85 font-semibold text-xs sm:text-sm px-3 sm:px-4 gap-1 min-h-[44px] min-w-[44px]"
+                className="bg-primary text-primary-foreground hover:brightness-110 font-bold font-headline text-sm px-6 py-2.5 rounded-full shadow-lg shadow-primary/20 transition-all"
               >
-                <User className="w-4 h-4" />
                 {t('nav.enter')}
               </Button>
             </Link>

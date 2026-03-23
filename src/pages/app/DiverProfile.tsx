@@ -90,7 +90,7 @@ const DiverProfile = () => {
           </div>
           <div>
             <Label>{t('diver.profile.dives')}</Label>
-            <Input type="number" value={form.logged_dives} onChange={e => setForm(f => ({ ...f, logged_dives: parseInt(e.target.value) || 0 }))} />
+            <Input type="number" value={form.logged_dives} onChange={e => setForm(f => ({ ...f, logged_dives: parseInt(e.target.value) || 0 }))} onFocus={(e) => e.target.select()} />
           </div>
           <div>
             <Label>{t('diver.profile.emergency')}</Label>

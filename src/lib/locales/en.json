@@ -131,6 +131,12 @@
   "admin.trips.created": "Trip created successfully",
   "admin.trips.updated": "Trip updated",
   "admin.trips.deleted": "Trip deleted",
+  "admin.trips.saveDraft": "Save as Draft",
+  "admin.trips.publish": "Publish Trip",
+  "admin.trips.saveChanges": "Save Changes",
+  "admin.trips.unpublish": "Unpublish to Draft",
+  "admin.trips.published": "Trip published!",
+  "admin.trips.savedDraft": "Draft saved",
   "admin.trips.confirmDelete": "Are you sure you want to delete this trip?",
   "admin.trips.field.title": "Title",
   "admin.trips.field.description": "Description",
@@ -235,5 +241,25 @@
   "diver.trip.joinWhatsApp": "Join WhatsApp Group",
   "diver.trip.whatsAppPending": "Group link not available yet",
   "explore.loginRequired": "You need to create an account to book",
-  "auth.useAnotherAccount": "Use another account"
+  "auth.useAnotherAccount": "Use another account",
+
+  "admin.trips.field.image": "Trip Image",
+  "admin.trips.confirmDeleteDesc": "This action cannot be undone.",
+  "common.delete": "Delete",
+  "common.notFound": "Trip not found",
+
+  "image.noImage": "No image",
+  "image.upload": "Upload image",
+  "image.change": "Change image",
+  "image.uploaded": "Image uploaded successfully",
+  "image.uploadError": "Error uploading image",
+  "image.recommendation": "Recommended: 800x600px or higher. JPG, PNG, or WebP.",
+
+  "admin.trips.difficulty.beginner": "Beginner",
+  "admin.trips.difficulty.intermediate": "Intermediate",
+  "admin.trips.difficulty.advanced": "Advanced",
+  "admin.trips.status.draft": "Draft",
+  "admin.trips.status.published": "Published",
+  "admin.trips.status.completed": "Completed",
+  "admin.trips.status.cancelled": "Cancelled"
 }

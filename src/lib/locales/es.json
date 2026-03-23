@@ -131,6 +131,12 @@
   "admin.trips.created": "Trip creado exitosamente",
   "admin.trips.updated": "Trip actualizado",
   "admin.trips.deleted": "Trip eliminado",
+  "admin.trips.saveDraft": "Guardar como Borrador",
+  "admin.trips.publish": "Publicar Trip",
+  "admin.trips.saveChanges": "Guardar Cambios",
+  "admin.trips.unpublish": "Despublicar a Borrador",
+  "admin.trips.published": "¡Trip publicado!",
+  "admin.trips.savedDraft": "Borrador guardado",
   "admin.trips.confirmDelete": "¿Estás seguro de eliminar este trip?",
   "admin.trips.field.title": "Título",
   "admin.trips.field.description": "Descripción",
@@ -235,5 +241,25 @@
   "diver.trip.joinWhatsApp": "Unirse al grupo de WhatsApp",
   "diver.trip.whatsAppPending": "Enlace del grupo aún no disponible",
   "explore.loginRequired": "Necesitas crear una cuenta para reservar",
-  "auth.useAnotherAccount": "Usar otra cuenta"
+  "auth.useAnotherAccount": "Usar otra cuenta",
+
+  "admin.trips.field.image": "Imagen del Trip",
+  "admin.trips.confirmDeleteDesc": "Esta acción no se puede deshacer.",
+  "common.delete": "Eliminar",
+  "common.notFound": "Trip no encontrado",
+
+  "image.noImage": "Sin imagen",
+  "image.upload": "Subir imagen",
+  "image.change": "Cambiar imagen",
+  "image.uploaded": "Imagen subida correctamente",
+  "image.uploadError": "Error al subir la imagen",
+  "image.recommendation": "Recomendado: 800x600px o superior. JPG, PNG o WebP.",
+
+  "admin.trips.difficulty.beginner": "Principiante",
+  "admin.trips.difficulty.intermediate": "Intermedio",
+  "admin.trips.difficulty.advanced": "Avanzado",
+  "admin.trips.status.draft": "Borrador",
+  "admin.trips.status.published": "Publicado",
+  "admin.trips.status.completed": "Completado",
+  "admin.trips.status.cancelled": "Cancelado"
 }

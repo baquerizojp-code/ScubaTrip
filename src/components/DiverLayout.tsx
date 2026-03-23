@@ -1,5 +1,5 @@
 import { Outlet, useLocation, Link } from 'react-router-dom';
-import { Compass, CalendarCheck, User, LogOut, Globe } from 'lucide-react';
+import { Compass, CalendarCheck, User, LogOut, Globe, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useI18n } from '@/lib/i18n';
@@ -12,6 +12,7 @@ const DiverLayout = () => {
   const { t, locale, setLocale } = useI18n();
 
   const navItems = [
+    { to: '/app', exact: true, icon: Home, label: 'Dashboard' },
     { to: '/app/discover', icon: Compass, label: t('nav.discover') },
     { to: '/app/bookings', icon: CalendarCheck, label: t('nav.myBookings') },
     { to: '/app/profile', icon: User, label: t('nav.profile') },
@@ -46,8 +47,8 @@ const DiverLayout = () => {
       {/* Bottom nav */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border px-safe">
         <div className="flex items-center justify-around h-16 max-w-lg mx-auto">
-          {navItems.map(({ to, icon: Icon, label }) => {
-            const active = pathname.startsWith(to);
+          {navItems.map(({ to, icon: Icon, label, exact }) => {
+            const active = exact ? pathname === to : pathname.startsWith(to);
             return (
               <Link
                 key={to}

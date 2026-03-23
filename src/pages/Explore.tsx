@@ -2,7 +2,7 @@ import { useI18n } from '@/lib/i18n';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Compass } from 'lucide-react';
+import { Compass, MapPin, Calendar } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import TripCard from '@/components/TripCard';
 import type { TripWithCenter } from '@/components/TripCard';
@@ -27,12 +27,78 @@ const Explore = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="container mx-auto px-4 pt-24 pb-12">
-        <h1 className="text-2xl font-bold text-foreground mb-1">{t('diver.discover.title')}</h1>
-        <p className="text-muted-foreground text-sm mb-6">{t('diver.discover.subtitle')}</p>
+      <div className="max-w-[1400px] mx-auto px-6 md:px-10 pt-28 pb-16">
+        {/* Header & Intro */}
+        <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <span className="font-headline uppercase tracking-widest text-xs text-secondary font-bold mb-2 block">
+              {t('diver.discover.subtitle')}
+            </span>
+            <h1 className="text-4xl md:text-5xl font-extrabold font-headline text-primary tracking-tight leading-none">
+              {t('diver.discover.title')}
+            </h1>
+          </div>
+          <div className="flex gap-2">
+            <span className="bg-primary/5 px-4 py-2 rounded-full text-sm font-medium text-foreground">
+              {trips.length} {t('nav.explore')}
+            </span>
+          </div>
+        </div>
+
+        {/* Search & Filter Bar */}
+        <section className="mb-12">
+          <div className="bg-background p-2 rounded-full shadow-[0_8px_30px_rgb(0,10,30,0.04)] border border-border flex flex-wrap md:flex-nowrap items-center gap-2">
+            <div className="flex-1 flex items-center px-4 md:px-6 gap-3 min-w-[180px]">
+              <MapPin className="w-5 h-5 text-secondary" />
+              <div className="flex flex-col w-full">
+                <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Location</label>
+                <input 
+                  type="text" 
+                  placeholder="Where to dive?" 
+                  className="bg-transparent border-none p-0 text-foreground font-semibold focus:ring-0 placeholder:text-muted-foreground text-sm w-full"
+                />
+              </div>
+            </div>
+            
+            <div className="w-px h-10 bg-border hidden md:block"></div>
+            
+            <div className="flex-1 flex items-center px-4 md:px-6 gap-3 min-w-[180px]">
+              <Calendar className="w-5 h-5 text-secondary" />
+              <div className="flex flex-col w-full">
+                <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Date Range</label>
+                <input 
+                  type="text" 
+                  placeholder="Flexible" 
+                  className="bg-transparent border-none p-0 text-foreground font-semibold focus:ring-0 placeholder:text-muted-foreground text-sm w-full"
+                />
+              </div>
+            </div>
+            
+            <div className="w-px h-10 bg-border hidden md:block"></div>
+            
+            <div className="flex-1 flex items-center px-4 md:px-6 gap-3 min-w-[180px]">
+              <Compass className="w-5 h-5 text-secondary" />
+              <div className="flex flex-col w-full">
+                <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Diver Level</label>
+                <select className="bg-transparent border-none p-0 text-foreground font-semibold focus:ring-0 text-sm appearance-none flex-1 w-full outline-none ring-0 focus:border-none focus:outline-none">
+                  <option value="">Any Level</option>
+                  <option value="open_water">Open Water</option>
+                  <option value="advanced">Advanced Open Water</option>
+                  <option value="rescue">Rescue Diver</option>
+                  <option value="divemaster">Divemaster</option>
+                </select>
+              </div>
+            </div>
+            
+            <button className="bg-primary text-primary-foreground h-12 w-12 md:h-14 md:w-40 rounded-full flex items-center justify-center gap-2 hover:bg-primary-container transition-all active:scale-95 shrink-0">
+              <Compass className="w-5 h-5 md:hidden" />
+              <span className="hidden md:block font-bold">Search</span>
+            </button>
+          </div>
+        </section>
 
         {isLoading ? (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             {[1, 2, 3].map(i => (
               <Skeleton key={i} className="h-64 rounded-xl" />
             ))}
@@ -47,7 +113,7 @@ const Explore = () => {
             <p>{t('diver.discover.empty')}</p>
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             {trips.map(trip => (
               <TripCard key={trip.id} trip={trip} linkTo={`/explore/${trip.id}`} />
             ))}

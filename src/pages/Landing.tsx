@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useI18n } from '@/lib/i18n';
 import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/Navbar';
+import ScubaMaskLogo from '@/components/ScubaMaskLogo';
 import heroImageWebp from '@/assets/hero-ocean.webp';
 import heroImageMobileWebp from '@/assets/hero-ocean-mobile.webp';
 import heroImageFallback from '@/assets/hero-ocean.jpg';
@@ -41,89 +42,49 @@ const Landing = () => {
     <div className="min-h-screen bg-background overflow-x-hidden">
       <Navbar transparent />
 
-      {/* Hero — full viewport, mobile-first */}
-      <section className="relative min-h-[100svh] flex items-end sm:items-center overflow-hidden">
-        {/* Background image */}
-        <div className="absolute inset-0">
-          <picture>
-            <source
-              media="(max-width: 640px)"
-              srcSet={heroImageMobileWebp}
-              type="image/webp"
-            />
-            <source
-              srcSet={heroImageWebp}
-              type="image/webp"
-            />
-            <img
-              src={heroImageFallback}
-              alt="Underwater scuba diving"
-              className="w-full h-full object-cover object-center"
-              loading="eager"
-              fetchPriority="high"
-              width={1920}
-              height={1080}
-              decoding="async"
-            />
-          </picture>
-        {/* Stronger gradient for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-ocean-900 via-ocean-900/70 to-transparent" />
-          {/* Top gradient for navbar legibility */}
-          <div className="absolute inset-x-0 top-0 h-[120px] bg-gradient-to-b from-ocean-900/50 via-ocean-900/20 to-transparent" />
+      {/* Hero — Cinematic V3 Style */}
+      <section className="relative h-screen min-h-[800px] w-full overflow-hidden bg-secondary flex items-center">
+        {/* Background image & gradient */}
+        <div className="absolute inset-0 z-0 bg-secondary">
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuByPE3eAgrxwf0REkZAIjQbJtmGXZ-6IyXQChwHuBaRjk8LeVrmeZnMxSiN4BFZL7FT4q1l_UQQEFhWlZWgvDxLR9EyYhxI4imScwIkEiIdiuZhzjh0dkVtyotInsVKeM_t2QU8ivqfof7ZjGx7ghXuNXgUCUUMppGSW-yDJQS-kTNTfkeDGPkxeXC97AqYigLnzmXPJARwUIoRCq8SONsMyzYskuec0CztH-EGHeNAL8lDgKNGR_yYAq-1CGWKyvzEjiVeF23BzC1D"
+            alt="Technical diver descending"
+            className="w-full h-full object-cover scale-105 opacity-50 animate-fade-in mix-blend-luminosity"
+            loading="eager"
+            fetchPriority="high"
+          />
+          {/* V3 Cinematic Gradient: transparent at top, solid dark at bottom */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-secondary/60 to-secondary opacity-95"></div>
+          {/* Top gradient for navbar */}
+          <div className="absolute inset-x-0 top-0 h-[120px] bg-gradient-to-b from-secondary/80 to-transparent"></div>
         </div>
 
-        {/* Floating bubbles */}
-        {[...Array(5)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full border border-primary-foreground/15 animate-bubble-float"
-            style={{
-              width: `${10 + i * 6}px`,
-              height: `${10 + i * 6}px`,
-              left: `${8 + i * 18}%`,
-              bottom: `${15 + (i % 3) * 18}%`,
-              animationDelay: `${i * 0.8}s`,
-              animationDuration: `${3.5 + i * 0.6}s`,
-            }}
-          />
-        ))}
-
-        {/* Hero content — reduced padding to push above fold */}
-        <div className="relative w-full pb-12 pt-16 sm:pb-0 sm:pt-20">
-          <div className="container mx-auto px-5 sm:px-6">
-            <div className="max-w-lg sm:max-w-2xl">
-              {/* Badge */}
-
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-primary-foreground leading-[1.1] mb-4 sm:mb-6 animate-fade-in">
-                {t('landing.hero.title')}
-              </h1>
-              <p className="text-base sm:text-lg lg:text-xl text-ocean-200/90 mb-6 sm:mb-8 leading-relaxed max-w-md sm:max-w-xl animate-fade-in" style={{ animationDelay: '0.12s' }}>
-                {t('landing.hero.subtitle')}
-              </p>
-
-              {/* CTA buttons */}
-              <div className="flex flex-col gap-3 animate-fade-in" style={{ animationDelay: '0.24s' }}>
-                <div className="flex flex-col gap-3">
-                  <Link to="/explore" className="w-full sm:w-auto">
-                    <Button size="lg" className="w-full sm:w-auto bg-cyan-electric text-cyan-electric-foreground hover:bg-cyan-electric/85 font-semibold text-base px-7">
-                      {t('landing.hero.cta.diver')}
-                      <ChevronRight className="w-4 h-4 ml-1" />
-                    </Button>
-                  </Link>
-                  <Link to="/register-center" className="w-full sm:w-auto">
-                    <Button
-                      size="lg"
-                      variant="hero-outline"
-                      className="w-full sm:w-auto text-sm px-6"
-                    >
-                      {t('landing.hero.cta.center')}
-                    </Button>
-                  </Link>
-                </div>
-              </div>
+        {/* Hero content */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 mt-16 sm:mt-24">
+          <div className="max-w-4xl">
+            <h1 className="text-5xl sm:text-7xl lg:text-[5.5rem] font-headline font-extrabold text-white leading-[1.1] sm:leading-[0.95] tracking-tighter mb-8 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+              {t('landing.hero.title')}
+            </h1>
+            <p className="text-lg sm:text-xl md:text-2xl text-ocean-200/90 max-w-2xl leading-relaxed font-light mb-12 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+              {t('landing.hero.subtitle')}
+            </p>
+            
+            {/* CTA buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 animate-slide-up" style={{ animationDelay: '0.3s' }}>
+              <Link to="/explore" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground px-8 sm:px-10 py-6 sm:py-7 rounded-full font-headline font-bold text-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 shadow-xl shadow-primary/20">
+                  {t('landing.hero.cta.diver')} <ChevronRight className="w-5 h-5"/>
+                </Button>
+              </Link>
+              <Link to="/register-center" className="w-full sm:w-auto">
+                <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/5 backdrop-blur-lg border-white/20 text-white px-8 sm:px-10 py-6 sm:py-7 rounded-full font-headline font-bold text-lg hover:bg-white/10 transition-all">
+                  {t('landing.hero.cta.center')}
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
+
       </section>
 
       {/* Features grid */}
@@ -186,49 +147,77 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* CTA section */}
-      <section className="py-16 sm:py-24 bg-ocean-900 relative overflow-hidden">
-        <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-primary-foreground/5" />
-        <div className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-primary-foreground/5" />
-
-        <div className="container mx-auto px-5 sm:px-6 text-center relative">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary-foreground mb-3 sm:mb-4">
-            {t('landing.cta.title')}
-          </h2>
-          <p className="text-ocean-200/80 text-base sm:text-lg mb-8 max-w-md mx-auto">
-            {t('landing.cta.subtitle')}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <Link to="/explore" className="w-full sm:w-auto">
-              <Button size="lg" className="w-full sm:w-auto bg-cyan-electric text-cyan-electric-foreground hover:bg-cyan-electric/85 font-semibold px-8">
-                {t('landing.cta.diver')}
-                <ChevronRight className="w-4 h-4 ml-1" />
-              </Button>
-            </Link>
-            <Link to="/register-center" className="w-full sm:w-auto">
-              <Button
-                size="lg"
-                variant="hero-outline"
-                className="w-full sm:w-auto text-sm px-6"
-              >
-                {t('landing.cta.center')}
-              </Button>
-            </Link>
+      {/* V3 Connection Section (Replacing old CTA) */}
+      <section className="py-24 sm:py-32 bg-background">
+        <div className="container mx-auto px-6 sm:px-8 max-w-7xl">
+          <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-20">
+            <div className="lg:w-1/2 relative w-full">
+              <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl"></div>
+              <img 
+                alt="Professional diver interface" 
+                className="rounded-xl shadow-2xl relative z-10 w-full h-[400px] lg:h-[600px] object-cover" 
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgReX-dwxSVcIzqkkZX_QxiOlDxNGlZlxh94SOkx9PR5BjLwYePkKYTLlIPhTh6UBmTcK49JPR3J7rwN_fadCQuv4gYib6h_3a-Hr_F9PDzalzd0N5C6PKVP2ZwZfToBgYQVV5hXtmo4glRlLlV4k5H07uFxkIoSHcOe4pzbtGttbbQkLfpcM1dBLp_lmkB0aAkHnob5Hy7tN_1Sh4optPXMyfHLKhF6JIcA74m3van0xJo-3hsc_OgR2jUI4DhhlOIn1bt-MPxcKY"
+                loading="lazy"
+              />
+            </div>
+            <div className="lg:w-1/2 space-y-8">
+              <span className="text-primary font-headline font-bold tracking-[0.4em] uppercase text-xs">
+                Performance Ecosystem
+              </span>
+              <h2 className="text-4xl sm:text-5xl font-headline font-extrabold text-foreground tracking-tight leading-tight">
+                Elite Divers Meet <br className="hidden sm:block" />World-Class Centers
+              </h2>
+              <p className="text-muted-foreground text-lg sm:text-xl leading-relaxed">
+                {t('landing.cta.subtitle')}
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                <Link to="/explore" className="w-full sm:w-auto">
+                  <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground hover:brightness-110 font-bold font-headline px-8 py-6 sm:py-7 rounded-full shadow-lg shadow-primary/20 transition-all text-base">
+                    {t('landing.cta.diver')} <ChevronRight className="w-5 h-5 ml-2"/>
+                  </Button>
+                </Link>
+                <Link to="/register-center" className="w-full sm:w-auto">
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto px-8 py-6 sm:py-7 rounded-full font-bold font-headline border-primary/20 text-foreground hover:bg-primary/5 transition-all text-base">
+                    {t('landing.cta.center')}
+                  </Button>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-8 sm:py-10 bg-ocean-900">
-        <div className="container mx-auto px-5 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-ocean-400 text-sm">© {new Date().getFullYear()} ScubaTrip</p>
-          <div className="flex gap-6">
-            <Link to="/explore" className="text-ocean-400 hover:text-ocean-200 text-sm transition-colors">
-              {t('nav.getStarted')}
-            </Link>
-            <Link to="/register-center" className="text-ocean-400 hover:text-ocean-200 text-sm transition-colors">
-              {t('landing.hero.cta.center')}
-            </Link>
+      {/* V3 Footer */}
+      <footer className="bg-secondary w-full mt-auto border-t border-white/10">
+        <div className="container mx-auto px-6 sm:px-8 py-12 lg:py-16 max-w-7xl">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-8">
+            <div className="md:col-span-6 lg:col-span-5">
+              <div className="flex items-center gap-3 mb-6">
+                 <ScubaMaskLogo className="w-6 h-8 text-primary" />
+                 <span className="text-xl font-black text-white font-headline tracking-tighter">ScubaTrip</span>
+              </div>
+              <p className="text-ocean-200 font-light max-w-sm mb-8 leading-relaxed">
+                © {new Date().getFullYear()} ScubaTrip. The ultimate ecosystem for technical divers and elite dive centers.
+              </p>
+            </div>
+            
+            <div className="md:col-span-6 lg:col-span-7 grid grid-cols-2 gap-8">
+              <div className="space-y-6">
+                <h5 className="text-ocean-400 font-headline text-xs font-bold uppercase tracking-widest">Network</h5>
+                <ul className="space-y-4">
+                  <li><Link to="/explore" className="text-ocean-200 hover:text-primary transition-colors text-sm font-semibold uppercase tracking-widest">{t('nav.explore')}</Link></li>
+                  <li><Link to="/register-center" className="text-ocean-200 hover:text-primary transition-colors text-sm font-semibold uppercase tracking-widest">{t('landing.hero.cta.center')}</Link></li>
+                </ul>
+              </div>
+              <div className="space-y-6">
+                <h5 className="text-ocean-400 font-headline text-xs font-bold uppercase tracking-widest">Resources</h5>
+                <ul className="space-y-4">
+                  <li><a href="#safety" className="text-ocean-200 hover:text-primary transition-colors text-sm font-semibold uppercase tracking-widest">{t('nav.safety')}</a></li>
+                  <li><a href="#logbook" className="text-ocean-200 hover:text-primary transition-colors text-sm font-semibold uppercase tracking-widest">{t('nav.logbook')}</a></li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </footer>

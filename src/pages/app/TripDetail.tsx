@@ -118,8 +118,7 @@ const TripDetail = () => {
     try {
       await createBooking(tripId, diverId, notes || undefined);
       toast.success(t('diver.trip.booked'));
-      const bk = await fetchBookingForTrip(tripId, diverId);
-      setExistingBooking(bk);
+      navigate('/app/bookings');
     } catch {
       toast.error(t('diver.trip.bookError'));
     }
@@ -225,7 +224,7 @@ const TripDetail = () => {
     );
   }
 
-  if (!trip) return <div className="p-6 text-center text-muted-foreground">Trip not found</div>;
+  if (!trip) return <div className="p-6 text-center text-muted-foreground">{t('common.notFound')}</div>;
 
   const statusMap: Record<string, { label: string; className: string }> = {
     pending: { label: t('diver.trip.statusPending'), className: 'bg-yellow-100 text-yellow-800' },
