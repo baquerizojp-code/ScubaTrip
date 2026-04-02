@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, Calendar, Clock, Users, Heart } from 'lucide-react';
 import { format } from 'date-fns';
+import { parseLocalDate } from '@/lib/utils';
 import { useI18n } from '@/lib/i18n';
 import type { Tables } from '@/integrations/supabase/types';
 
@@ -45,11 +46,7 @@ const TripCard = ({ trip, linkTo, bookingStatus }: TripCardProps) => {
       <div className="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/40 to-transparent"></div>
       
       <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
-        {trip.difficulty && (
-          <span className="bg-primary/80 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-white/10 w-fit">
-            {trip.difficulty}
-          </span>
-        )}
+
         {bookingStatus && (
           <span className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-white/10 w-fit ${bookingStatusColors[bookingStatus] || 'bg-white/20 text-white'}`}>
             {bookingStatusLabels[bookingStatus]?.[locale] || bookingStatus}
@@ -97,7 +94,7 @@ const TripCard = ({ trip, linkTo, bookingStatus }: TripCardProps) => {
             </div>
             <span className="text-[10px] flex items-center gap-1 font-bold uppercase tracking-widest bg-white/10 px-3 py-1.5 rounded-full text-white border border-white/5">
               <Calendar className="w-3 h-3" />
-              {format(new Date(trip.trip_date), 'MMM dd')}
+              {format(parseLocalDate(trip.trip_date), 'MMM dd')}
             </span>
           </div>
         </div>

@@ -46,13 +46,17 @@ const Landing = () => {
       <section className="relative h-screen min-h-[800px] w-full overflow-hidden bg-secondary flex items-center">
         {/* Background image & gradient */}
         <div className="absolute inset-0 z-0 bg-secondary">
-          <img
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuByPE3eAgrxwf0REkZAIjQbJtmGXZ-6IyXQChwHuBaRjk8LeVrmeZnMxSiN4BFZL7FT4q1l_UQQEFhWlZWgvDxLR9EyYhxI4imScwIkEiIdiuZhzjh0dkVtyotInsVKeM_t2QU8ivqfof7ZjGx7ghXuNXgUCUUMppGSW-yDJQS-kTNTfkeDGPkxeXC97AqYigLnzmXPJARwUIoRCq8SONsMyzYskuec0CztH-EGHeNAL8lDgKNGR_yYAq-1CGWKyvzEjiVeF23BzC1D"
-            alt="Technical diver descending"
-            className="w-full h-full object-cover scale-105 opacity-50 animate-fade-in mix-blend-luminosity"
-            loading="eager"
-            fetchPriority="high"
-          />
+          <picture>
+            <source srcSet={heroImageMobileWebp} media="(max-width: 640px)" type="image/webp" />
+            <source srcSet={heroImageWebp} type="image/webp" />
+            <img
+              src={heroImageFallback}
+              alt="Technical diver descending"
+              className="w-full h-full object-cover scale-105 opacity-50 animate-fade-in mix-blend-luminosity"
+              loading="eager"
+              fetchPriority="high"
+            />
+          </picture>
           {/* V3 Cinematic Gradient: transparent at top, solid dark at bottom */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-secondary/60 to-secondary opacity-95"></div>
           {/* Top gradient for navbar */}
@@ -156,16 +160,16 @@ const Landing = () => {
               <img 
                 alt="Professional diver interface" 
                 className="rounded-xl shadow-2xl relative z-10 w-full h-[400px] lg:h-[600px] object-cover" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgReX-dwxSVcIzqkkZX_QxiOlDxNGlZlxh94SOkx9PR5BjLwYePkKYTLlIPhTh6UBmTcK49JPR3J7rwN_fadCQuv4gYib6h_3a-Hr_F9PDzalzd0N5C6PKVP2ZwZfToBgYQVV5hXtmo4glRlLlV4k5H07uFxkIoSHcOe4pzbtGttbbQkLfpcM1dBLp_lmkB0aAkHnob5Hy7tN_1Sh4optPXMyfHLKhF6JIcA74m3van0xJo-3hsc_OgR2jUI4DhhlOIn1bt-MPxcKY"
+                src={heroImageFallback}
                 loading="lazy"
               />
             </div>
             <div className="lg:w-1/2 space-y-8">
               <span className="text-primary font-headline font-bold tracking-[0.4em] uppercase text-xs">
-                Performance Ecosystem
+                {t('landing.connection.badge')}
               </span>
               <h2 className="text-4xl sm:text-5xl font-headline font-extrabold text-foreground tracking-tight leading-tight">
-                Elite Divers Meet <br className="hidden sm:block" />World-Class Centers
+                {t('landing.connection.title1')} <br className="hidden sm:block" />{t('landing.connection.title2')}
               </h2>
               <p className="text-muted-foreground text-lg sm:text-xl leading-relaxed">
                 {t('landing.cta.subtitle')}
@@ -198,20 +202,20 @@ const Landing = () => {
                  <span className="text-xl font-black text-white font-headline tracking-tighter">ScubaTrip</span>
               </div>
               <p className="text-ocean-200 font-light max-w-sm mb-8 leading-relaxed">
-                © {new Date().getFullYear()} ScubaTrip. The ultimate ecosystem for technical divers and elite dive centers.
+                © {new Date().getFullYear()} ScubaTrip. {t('landing.footer.copyright')}
               </p>
             </div>
             
             <div className="md:col-span-6 lg:col-span-7 grid grid-cols-2 gap-8">
               <div className="space-y-6">
-                <h5 className="text-ocean-400 font-headline text-xs font-bold uppercase tracking-widest">Network</h5>
+                <h5 className="text-ocean-400 font-headline text-xs font-bold uppercase tracking-widest">{t('landing.footer.network')}</h5>
                 <ul className="space-y-4">
                   <li><Link to="/explore" className="text-ocean-200 hover:text-primary transition-colors text-sm font-semibold uppercase tracking-widest">{t('nav.explore')}</Link></li>
                   <li><Link to="/register-center" className="text-ocean-200 hover:text-primary transition-colors text-sm font-semibold uppercase tracking-widest">{t('landing.hero.cta.center')}</Link></li>
                 </ul>
               </div>
               <div className="space-y-6">
-                <h5 className="text-ocean-400 font-headline text-xs font-bold uppercase tracking-widest">Resources</h5>
+                <h5 className="text-ocean-400 font-headline text-xs font-bold uppercase tracking-widest">{t('landing.footer.resources')}</h5>
                 <ul className="space-y-4">
                   <li><a href="#safety" className="text-ocean-200 hover:text-primary transition-colors text-sm font-semibold uppercase tracking-widest">{t('nav.safety')}</a></li>
                   <li><a href="#logbook" className="text-ocean-200 hover:text-primary transition-colors text-sm font-semibold uppercase tracking-widest">{t('nav.logbook')}</a></li>

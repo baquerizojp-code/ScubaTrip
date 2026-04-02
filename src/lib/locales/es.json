@@ -9,6 +9,9 @@
   "nav.profile": "Perfil",
   "nav.dashboard": "Panel",
   "nav.language": "EN",
+  "nav.explore": "Explorar",
+  "nav.safety": "Seguridad",
+  "nav.logbook": "Bitácora",
 
   "landing.hero.badge": "Buceo en Latinoamérica",
   "landing.hero.title": "Descubre el mundo submarino",
@@ -261,5 +264,34 @@
   "admin.trips.status.draft": "Borrador",
   "admin.trips.status.published": "Publicado",
   "admin.trips.status.completed": "Completado",
-  "admin.trips.status.cancelled": "Cancelado"
+  "admin.trips.status.cancelled": "Cancelado",
+
+  "landing.connection.badge": "Ecosistema de Rendimiento",
+  "landing.connection.title1": "Buzos de Élite Conocen",
+  "landing.connection.title2": "Centros de Clase Mundial",
+  "landing.footer.copyright": "El ecosistema definitivo para buzos técnicos y centros de buceo de élite.",
+  "landing.footer.network": "Red",
+  "landing.footer.resources": "Recursos",
+
+  "admin.dashboard.overview": "Resumen",
+  "admin.dashboard.activeExpeditions": "Expediciones Activas",
+  "admin.dashboard.viewAll": "Ver Todo",
+  "admin.dashboard.confirmedDivers": "Buzos Confirmados",
+  "admin.dashboard.colExpedition": "Expedición",
+  "admin.dashboard.colDate": "Fecha",
+  "admin.dashboard.colCapacity": "Capacidad",
+  "admin.dashboard.colStatus": "Estado",
+  "admin.dashboard.noExpeditions": "No se encontraron expediciones activas.",
+
+  "diver.dashboard.welcomeBack": "Bienvenido de vuelta,",
+  "diver.dashboard.readyToDive": "¿Listo para tu próxima inmersión?",
+  "diver.dashboard.findExpeditions": "Buscar Expediciones",
+  "diver.dashboard.logbookAnalytics": "Bitácora de Buceo",
+  "diver.dashboard.totalDives": "Total de Inmersiones",
+  "diver.dashboard.upcomingTrips": "Próximos Trips",
+  "diver.dashboard.browseTrips": "Explorar Trips",
+  "diver.dashboard.noUpcoming": "No tienes expediciones próximas.",
+  "diver.dashboard.myCertification": "Mi Certificación",
+  "diver.dashboard.certLevel": "Nivel de Certificación",
+  "diver.dashboard.updateProfile": "Actualizar Perfil"
 }

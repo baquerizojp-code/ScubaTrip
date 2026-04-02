@@ -19,6 +19,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { Check, X, CalendarCheck, Clock, Ban, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
+import { parseLocalDate } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
@@ -152,7 +153,7 @@ const AdminBookings = () => {
             {booking.trips?.title} · {booking.trips?.dive_site}
           </p>
           <p className="text-sm text-muted-foreground">
-            {booking.trips?.trip_date && format(new Date(booking.trips.trip_date), 'dd/MM/yyyy')} · {booking.trips?.trip_time?.slice(0, 5)}
+            {booking.trips?.trip_date && format(parseLocalDate(booking.trips.trip_date), 'dd/MM/yyyy')} · {booking.trips?.trip_time?.slice(0, 5)}
           </p>
           <p className="text-xs text-muted-foreground mt-1">
             Cert: {booking.diver_profiles?.certification || '-'} · {booking.diver_profiles?.logged_dives ?? 0} dives

@@ -9,8 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import { FileText, Send } from 'lucide-react';
@@ -169,7 +168,8 @@ export const TripFormModal = ({ open, onOpenChange, trip, onSuccess }: TripFormM
             </div>
             <div>
               <Label>{t('common.date')}</Label>
-              <Input type="date" value={form.trip_date} onChange={(e) => setForm({ ...form, trip_date: e.target.value })} required />
+              <Input type="date" value={form.trip_date} onChange={(e) => setForm({ ...form, trip_date: e.target.value })} min={new Date().toISOString().split('T')[0]} max={new Date(Date.now() + 365 * 86400000).toISOString().split('T')[0]} onKeyDown={(e) => e.preventDefault()} required />
+              {formErrors.trip_date && <p className="text-sm text-destructive mt-1">{formErrors.trip_date}</p>}
             </div>
             <div>
               <Label>{t('common.time')}</Label>
@@ -183,35 +183,7 @@ export const TripFormModal = ({ open, onOpenChange, trip, onSuccess }: TripFormM
               <Label>{t('admin.trips.field.spots')}</Label>
               <Input type="number" min={1} max={20} value={form.total_spots || ''} onChange={(e) => setForm({ ...form, total_spots: Number(e.target.value) })} onFocus={(e) => e.target.select()} required />
             </div>
-            <div>
-              <Label>{t('admin.trips.field.difficulty')}</Label>
-              <Select value={form.difficulty} onValueChange={(v) => setForm({ ...form, difficulty: v as TripDifficulty })}>
-                <SelectTrigger><SelectValue placeholder="-" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="beginner">{t('admin.trips.difficulty.beginner')}</SelectItem>
-                  <SelectItem value="intermediate">{t('admin.trips.difficulty.intermediate')}</SelectItem>
-                  <SelectItem value="advanced">{t('admin.trips.difficulty.advanced')}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label>{t('admin.trips.field.minCert')}</Label>
-              <Select value={form.min_certification} onValueChange={(v) => setForm({ ...form, min_certification: v as CertLevel })}>
-                <SelectTrigger><SelectValue placeholder="-" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">{t('profile.cert.none')}</SelectItem>
-                  <SelectItem value="open_water">{t('profile.cert.openWater')}</SelectItem>
-                  <SelectItem value="advanced_open_water">{t('profile.cert.advanced')}</SelectItem>
-                  <SelectItem value="rescue_diver">{t('profile.cert.rescue')}</SelectItem>
-                  <SelectItem value="divemaster">{t('profile.cert.divemaster')}</SelectItem>
-                  <SelectItem value="instructor">{t('profile.cert.instructor')}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex items-center gap-3 pt-6">
-              <Switch checked={form.gear_rental_available} onCheckedChange={(v) => setForm({ ...form, gear_rental_available: v })} />
-              <Label>{t('admin.trips.field.gearRental')}</Label>
-            </div>
+
             <div className="md:col-span-2">
               <Label>WhatsApp Group URL</Label>
               <Input value={form.whatsapp_group_url} onChange={(e) => setForm({ ...form, whatsapp_group_url: e.target.value })} placeholder="https://chat.whatsapp.com/..." />

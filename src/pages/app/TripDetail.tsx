@@ -55,6 +55,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MapPin, Calendar, Clock, Users, DollarSign, ArrowLeft, Shield, Wrench, CalendarPlus, XCircle, MessageCircle } from 'lucide-react';
 import { format } from 'date-fns';
+import { parseLocalDate } from '@/lib/utils';
 import { downloadICSFile, getGoogleCalendarUrl } from '@/lib/calendar';
 import type { Tables } from '@/integrations/supabase/types';
 
@@ -263,7 +264,7 @@ const TripDetail = () => {
           </div>
           <div className="flex items-center gap-3 text-sm">
             <Calendar className="w-4 h-4 text-primary" />
-            <span className="text-foreground">{format(new Date(trip.trip_date), 'EEEE, dd MMM yyyy')}</span>
+            <span className="text-foreground">{format(parseLocalDate(trip.trip_date), 'EEEE, dd MMM yyyy')}</span>
           </div>
           <div className="flex items-center gap-3 text-sm">
             <Clock className="w-4 h-4 text-primary" />
@@ -277,18 +278,7 @@ const TripDetail = () => {
             <DollarSign className="w-4 h-4 text-primary" />
             <span className="text-foreground font-bold text-lg">${Number(trip.price_usd)} USD</span>
           </div>
-          {trip.min_certification && (
-            <div className="flex items-center gap-3 text-sm">
-              <Shield className="w-4 h-4 text-primary" />
-              <span className="text-foreground">{t('diver.trip.minCert')}: {trip.min_certification.replace(/_/g, ' ')}</span>
-            </div>
-          )}
-          {trip.gear_rental_available && (
-            <div className="flex items-center gap-3 text-sm">
-              <Wrench className="w-4 h-4 text-primary" />
-              <span className="text-foreground">{t('diver.trip.gearAvailable')}</span>
-            </div>
-          )}
+
         </CardContent>
       </Card>
 

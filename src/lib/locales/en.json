@@ -9,6 +9,9 @@
   "nav.profile": "Profile",
   "nav.dashboard": "Dashboard",
   "nav.language": "ES",
+  "nav.explore": "Explore",
+  "nav.safety": "Safety",
+  "nav.logbook": "Logbook",
 
   "landing.hero.badge": "Diving in Latin America",
   "landing.hero.title": "Discover the underwater world",
@@ -261,5 +264,34 @@
   "admin.trips.status.draft": "Draft",
   "admin.trips.status.published": "Published",
   "admin.trips.status.completed": "Completed",
-  "admin.trips.status.cancelled": "Cancelled"
+  "admin.trips.status.cancelled": "Cancelled",
+
+  "landing.connection.badge": "Performance Ecosystem",
+  "landing.connection.title1": "Elite Divers Meet",
+  "landing.connection.title2": "World-Class Centers",
+  "landing.footer.copyright": "The ultimate ecosystem for technical divers and elite dive centers.",
+  "landing.footer.network": "Network",
+  "landing.footer.resources": "Resources",
+
+  "admin.dashboard.overview": "Overview",
+  "admin.dashboard.activeExpeditions": "Active Expeditions",
+  "admin.dashboard.viewAll": "View All",
+  "admin.dashboard.confirmedDivers": "Confirmed Divers",
+  "admin.dashboard.colExpedition": "Expedition",
+  "admin.dashboard.colDate": "Date",
+  "admin.dashboard.colCapacity": "Capacity",
+  "admin.dashboard.colStatus": "Status",
+  "admin.dashboard.noExpeditions": "No active expeditions found.",
+
+  "diver.dashboard.welcomeBack": "Welcome back,",
+  "diver.dashboard.readyToDive": "Ready for your next deep dive?",
+  "diver.dashboard.findExpeditions": "Find Expeditions",
+  "diver.dashboard.logbookAnalytics": "Logbook Analytics",
+  "diver.dashboard.totalDives": "Total Dives",
+  "diver.dashboard.upcomingTrips": "Upcoming Trips",
+  "diver.dashboard.browseTrips": "Browse Trips",
+  "diver.dashboard.noUpcoming": "No upcoming expeditions.",
+  "diver.dashboard.myCertification": "My Certification",
+  "diver.dashboard.certLevel": "Certification Level",
+  "diver.dashboard.updateProfile": "Update Profile"
 }

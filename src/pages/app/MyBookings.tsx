@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Calendar, MapPin, ChevronRight, X, MessageCircle } from 'lucide-react';
 import { format } from 'date-fns';
+import { parseLocalDate } from '@/lib/utils';
 import { toast } from 'sonner';
 
 
@@ -102,7 +103,7 @@ const MyBookings = () => {
                     <p className="text-sm text-muted-foreground truncate">{b.trips?.dive_centers?.name}</p>
                     <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{b.trips?.dive_site}</span>
-                      <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{b.trips?.trip_date ? format(new Date(b.trips.trip_date), 'dd MMM') : ''}</span>
+                      <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{b.trips?.trip_date ? format(parseLocalDate(b.trips.trip_date), 'dd MMM') : ''}</span>
                     </div>
                     {b.rejection_reason && (
                       <p className="text-xs text-destructive mt-1">{b.rejection_reason}</p>

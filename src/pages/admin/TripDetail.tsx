@@ -24,6 +24,7 @@ import {
   ArrowLeft, Edit, Check, X, Clock, Users, Ship, Calendar, MapPin, Anchor, Info, Ban 
 } from 'lucide-react';
 import { format } from 'date-fns';
+import { parseLocalDate } from '@/lib/utils';
 
 const AdminTripDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -139,7 +140,7 @@ const AdminTripDetail = () => {
             <p className="text-sm text-muted-foreground flex items-center gap-2">
               <MapPin className="h-4 w-4" /> {trip.dive_site}
               <span className="opacity-50">•</span>
-              <Calendar className="h-4 w-4" /> {format(new Date(trip.trip_date), 'MMMM d, yyyy')}
+              <Calendar className="h-4 w-4" /> {format(parseLocalDate(trip.trip_date), 'MMMM d, yyyy')}
               <span className="opacity-50">•</span>
               <Clock className="h-4 w-4" /> {trip.trip_time?.slice(0, 5)}
             </p>

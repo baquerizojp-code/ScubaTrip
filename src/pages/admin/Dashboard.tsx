@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useI18n } from '@/lib/i18n';
 import { fetchDashboardStats, autoCompletePastTrips } from '@/services/trips';
@@ -6,13 +5,15 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Ship, CalendarCheck, Users, Plus, ChevronRight, Activity, AlertCircle, FileText } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Ship, CalendarCheck, Users, Plus, ChevronRight } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
+import { parseLocalDate } from '@/lib/utils';
 
 const AdminDashboard = () => {
   const { diveCenterId } = useAuth();
   const { t } = useI18n();
+  const navigate = useNavigate();
 
   useQuery({
     queryKey: ['auto-complete-trips'],
@@ -44,7 +45,7 @@ const AdminDashboard = () => {
 
   const cards = [
     { icon: Ship, label: t('admin.dashboard.upcomingTrips'), value: stats?.trips ?? 0, to: '/admin/trips?filter=upcoming' },
-    { icon: Users, label: 'Confirmed Divers', value: stats?.confirmedThisMonth ?? 0, to: '/admin/bookings?tab=confirmed' },
+    { icon: Users, label: t('admin.dashboard.confirmedDivers'), value: stats?.confirmedThisMonth ?? 0, to: '/admin/bookings?tab=confirmed' },
     { icon: CalendarCheck, label: t('admin.dashboard.pendingBookings'), value: stats?.pendingBookings ?? 0, to: '/admin/bookings?tab=pending' },
   ];
 
@@ -52,7 +53,7 @@ const AdminDashboard = () => {
     <div className="max-w-6xl mx-auto py-6">
       <div className="flex items-end justify-between mb-8">
         <div>
-           <span className="font-headline uppercase tracking-widest text-[10px] text-muted-foreground font-bold mb-1 block">Overview</span>
+           <span className="font-headline uppercase tracking-widest text-[10px] text-muted-foreground font-bold mb-1 block">{t('admin.dashboard.overview')}</span>
            <h1 className="text-3xl font-black font-headline text-foreground">{t('admin.dashboard.title')}</h1>
         </div>
         <Button asChild className="gap-2 rounded-full font-bold px-6 shadow-sm">
@@ -86,36 +87,36 @@ const AdminDashboard = () => {
             <div className="bg-card rounded-3xl border border-border shadow-sm overflow-hidden">
                <div className="p-6 border-b border-border flex justify-between items-center bg-muted/20">
                   <h3 className="font-headline font-bold text-xl text-foreground flex items-center gap-2">
-                     <Ship className="w-5 h-5 text-primary" /> Active Expeditions
+                     <Ship className="w-5 h-5 text-primary" /> {t('admin.dashboard.activeExpeditions')}
                   </h3>
                   <Link to="/admin/trips" className="text-sm font-bold text-primary hover:underline flex items-center">
-                     View All <ChevronRight className="w-4 h-4 ml-1" />
+                     {t('admin.dashboard.viewAll')} <ChevronRight className="w-4 h-4 ml-1" />
                   </Link>
                </div>
                <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                      <thead>
                         <tr className="bg-muted/40 text-[10px] uppercase tracking-widest text-muted-foreground">
-                           <th className="p-4 font-bold border-b border-border">Expedition</th>
-                           <th className="p-4 font-bold border-b border-border">Date</th>
-                           <th className="p-4 font-bold border-b border-border text-center">Capacity</th>
-                           <th className="p-4 font-bold border-b border-border text-right">Status</th>
+                           <th className="p-4 font-bold border-b border-border">{t('admin.dashboard.colExpedition')}</th>
+                           <th className="p-4 font-bold border-b border-border">{t('admin.dashboard.colDate')}</th>
+                           <th className="p-4 font-bold border-b border-border text-center">{t('admin.dashboard.colCapacity')}</th>
+                           <th className="p-4 font-bold border-b border-border text-right">{t('admin.dashboard.colStatus')}</th>
                         </tr>
                      </thead>
                      <tbody className="divide-y divide-border/50">
                         {recentTrips?.length === 0 ? (
                            <tr>
-                              <td colSpan={4} className="p-8 text-center text-muted-foreground">No active expeditions found.</td>
+                              <td colSpan={4} className="p-8 text-center text-muted-foreground">{t('admin.dashboard.noExpeditions')}</td>
                            </tr>
                         ) : (
                            recentTrips?.map(trip => (
-                              <tr key={trip.id} className="hover:bg-muted/30 transition-colors group cursor-pointer" onClick={() => window.location.href=`/admin/trips/${trip.id}`}>
+                              <tr key={trip.id} className="hover:bg-muted/30 transition-colors group cursor-pointer" onClick={() => navigate(`/admin/trips/${trip.id}`)}>
                                  <td className="p-4">
                                     <p className="font-bold text-foreground text-sm group-hover:text-primary transition-colors">{trip.title}</p>
                                     <p className="text-xs text-muted-foreground truncate max-w-[200px]">{trip.dive_site}</p>
                                  </td>
                                  <td className="p-4">
-                                    <p className="text-sm font-medium">{format(new Date(trip.trip_date), 'MMM dd, yyyy')}</p>
+                                    <p className="text-sm font-medium">{format(parseLocalDate(trip.trip_date), 'MMM dd, yyyy')}</p>
                                     <p className="text-xs text-muted-foreground">{trip.trip_time.slice(0,5)}</p>
                                  </td>
                                  <td className="p-4">

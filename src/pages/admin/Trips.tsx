@@ -24,6 +24,7 @@ import {
 import { toast } from 'sonner';
 import { Plus, Edit, Trash2, Eye, Ship, FileText, Send } from 'lucide-react';
 import { format } from 'date-fns';
+import { parseLocalDate } from '@/lib/utils';
 import type { Database } from '@/integrations/supabase/types';
 
 type TripStatus = Database['public']['Enums']['trip_status'];
@@ -174,7 +175,7 @@ const AdminTrips = () => {
                   <Badge variant="outline" className={statusColor(trip.status)}>{trip.status}</Badge>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  {trip.dive_site} · {format(new Date(trip.trip_date), 'dd/MM/yyyy')} · {trip.trip_time?.slice(0, 5)}
+                  {trip.dive_site} · {format(parseLocalDate(trip.trip_date), 'dd/MM/yyyy')} · {trip.trip_time?.slice(0, 5)}
                 </p>
                 <p className="text-sm text-muted-foreground">
                   ${Number(trip.price_usd)} · {trip.available_spots}/{trip.total_spots} {t('common.spots')}

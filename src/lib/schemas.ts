@@ -8,7 +8,12 @@ export const tripSchema = z.object({
   description: z.string().optional().default(''),
   dive_site: z.string().min(1, 'Dive site is required'),
   departure_point: z.string().min(1, 'Departure point is required'),
-  trip_date: z.string().min(1, 'Date is required'),
+  trip_date: z.string().min(1, 'Date is required').refine((val) => {
+    const date = new Date(val + 'T00:00:00');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return !isNaN(date.getTime()) && date >= today;
+  }, 'Date must be today or in the future'),
   trip_time: z.string().min(1, 'Time is required'),
   total_spots: z.number().int().positive('Must be at least 1').max(20, 'Maximum 20 spots allowed'),
   price_usd: z.number().nonnegative('Price must be 0 or more'),

@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { MapPin, Calendar, Clock, Users, Shield, Wrench, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { format } from 'date-fns';
+import { parseLocalDate } from '@/lib/utils';
 import Navbar from '@/components/Navbar';
 import type { Tables } from '@/integrations/supabase/types';
 
@@ -96,11 +97,6 @@ const ExploreTrip = () => {
               </Button>
               
               <div className="flex flex-wrap gap-3 mb-6">
-                {trip.difficulty && (
-                  <Badge className="bg-secondary text-secondary-foreground border-0 text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg">
-                    {trip.difficulty}
-                  </Badge>
-                )}
                 <Badge className="bg-black/40 backdrop-blur-md text-white border border-white/20 text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full flex items-center gap-2 shadow-lg">
                   <span className="w-2 h-2 rounded-full bg-secondary"></span>
                   {trip.dive_centers?.name || 'Independent Center'}
@@ -140,7 +136,7 @@ const ExploreTrip = () => {
              {/* Detailed Specs */}
              <div>
                 <h2 className="text-2xl font-headline font-bold mb-8 text-foreground">Expedition Details</h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 bg-card p-6 md:p-8 rounded-3xl border border-border shadow-sm">
+                <div className="grid grid-cols-2 gap-4 md:gap-6 bg-card p-6 md:p-8 rounded-3xl border border-border shadow-sm">
                     <div className="space-y-3">
                       <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                           <Clock className="w-5 h-5 text-secondary" />
@@ -153,31 +149,11 @@ const ExploreTrip = () => {
                     
                     <div className="space-y-3">
                       <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                          <Shield className="w-5 h-5 text-secondary" />
-                      </div>
-                      <div>
-                          <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Min Cert</p>
-                          <p className="font-bold text-foreground capitalize">{trip.min_certification ? trip.min_certification.replace(/_/g, ' ') : 'None'}</p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                           <Users className="w-5 h-5 text-secondary" />
                       </div>
                       <div>
                           <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Group</p>
                           <p className="font-bold text-foreground">Max {trip.total_spots}</p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                          <Wrench className="w-5 h-5 text-secondary" />
-                      </div>
-                      <div>
-                          <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Gear</p>
-                          <p className="font-bold text-foreground">{trip.gear_rental_available ? 'Available' : 'Required'}</p>
                       </div>
                     </div>
                 </div>
@@ -239,7 +215,7 @@ const ExploreTrip = () => {
                          </div>
                          <div>
                             <p className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Departure Date</p>
-                            <p className="font-bold text-foreground">{format(new Date(trip.trip_date), 'MMM dd, yyyy')}</p>
+                            <p className="font-bold text-foreground">{format(parseLocalDate(trip.trip_date), 'MMM dd, yyyy')}</p>
                          </div>
                       </div>
                    </div>
